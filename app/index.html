@@ -9,15 +9,16 @@
   <script src="scripts/vendor/bootstrap.min.js"></script>
   <script src="scripts/vendor/angular.min.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="scripts/controllers/new_game_controller.js"></script>
 </head>
 <body>
   <nav class="navbar navbar-default">
   </nav>
   <div class="panel">
+    <div class="panel-heading">
+      <h1>Scorebook</h1>
+    </div>
     <div class="panel-body">
-      <div ng-controller="MyController">
-        <p>My Controller Person Name: {{ person.name }}</p>
-      </div>
       <div ng-controller="NewGameController">
         <form>
           <div class="form-group">
