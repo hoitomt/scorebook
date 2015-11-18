@@ -1,0 +1,33 @@
+<div class="panel">
+  <div class="panel-heading">
+    <h1>Scorebook</h1>
+  </div>
+  <div class="panel-body">
+    <div ng-controller="gameController">
+      <form>
+        <div class="form-group">
+          <p><a ng-click="showNewGameForm = !showNewGameForm" href="" class="btn btn-success">New Game</a></p>
+          <div ng-show="showNewGameForm">
+            <p>
+              <input type="text" class="form-control" name="opponentName" ng-model="opponent.name" value="{{opponent.name}}" placeholder="Opponent">
+            </p>
+            <a href="" class="btn btn-success" ng-click="createNewGame(opponent)">Create Game</a>
+            <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Games</h3>
+      </div>
+      <div class="panel-body">
+        <div class="list-group">
+          <a href="#" class="list-group-item">10/31/2015 Eau Claire Eagles</a>
+          <a href="#" class="list-group-item">10/31/2015 St. Croix Falls</a>
+          <a href="#" class="list-group-item">10/31/2015 Ladysmith</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

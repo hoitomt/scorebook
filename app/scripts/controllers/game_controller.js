@@ -1,5 +1,7 @@
-app.controller('NewGameController', ['$scope', function($scope) {
+app.controller('gameController', ['$scope', function($scope) {
+  $scope.message = "Welcome to the Arena";
   $scope.showNewGameForm = false;
+
   resetOpponent();
 
   $scope.createNewGame = function(opponent) {
