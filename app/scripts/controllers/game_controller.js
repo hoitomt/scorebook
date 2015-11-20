@@ -8,13 +8,12 @@ app.controller('gameController', function($scope, $route, $routeParams, $locatio
 
   resetOpponent();
 
-  $scope.createNewGame = function(game) {
-    console.log("Opponent: ", game);
-    var gameFactory = new GameFactory(game);
-    gameFactory.save();
+  $scope.createNewGame = function(gameParams) {
+    console.log("Opponent: ", gameParams);
+    var game = new GameFactory(gameParams);
+    game.create();
 
-    opponentId = '3';
-    $location.path('/game/' + opponentId);
+    $location.path('/game/' + game.key);
   }
 
   $scope.cancelCreateGame = function() {
