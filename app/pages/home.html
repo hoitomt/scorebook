@@ -9,9 +9,11 @@
           <p><a ng-click="showNewGameForm = !showNewGameForm" href="" class="btn btn-success">New Game</a></p>
           <div ng-show="showNewGameForm">
             <p>
-              <input type="text" class="form-control" name="opponentName" ng-model="opponent.name" value="{{opponent.name}}" placeholder="Opponent">
+              <input type="text" class="form-control" name="gameOpponent" ng-model="game.opponent" value="{{game.opponent}}" placeholder="Opponent">
+              <br />
+              <input type="text" class="form-control" id="game-date" name="gameDate" ng-model="game.date" value="{{game.date}}" placeholder="Date">
             </p>
-            <a href="" class="btn btn-success" ng-click="createNewGame(opponent)">Create Game</a>
+            <a href="" class="btn btn-success" ng-click="createNewGame(game)">Create Game</a>
             <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
           </div>
         </div>
@@ -31,3 +33,9 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $('#game-date').pickadate({
+    format: 'm/d/yyyy'
+  });
+</script>
