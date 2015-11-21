@@ -1,4 +1,4 @@
-var app = angular.module('scorebook', ['ngRoute']);
+var app = angular.module('scorebook', ['ngRoute', 'ngMessages']);
 
 app.config(function($routeProvider) {
   $routeProvider

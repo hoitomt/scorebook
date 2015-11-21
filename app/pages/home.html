@@ -1,21 +1,41 @@
-<div class="panel">
-  <div class="panel-heading">
-    <h1>Scorebook</h1>
-  </div>
+<div class="panel" ng-controller="gameController">
   <div class="panel-body">
-    <div ng-controller="gameController">
-      <form>
-        <div class="form-group">
+    <div>
+      <!-- Use novalidate so that angular validations are boss -->
+      <form name="newGame" novalidate>
+        <div ng-show="!showNewGameForm">
           <p><a ng-click="showNewGameForm = !showNewGameForm" href="" class="btn btn-success">New Game</a></p>
-          <div ng-show="showNewGameForm">
-            <p>
-              <input type="text" class="form-control" name="gameOpponent" ng-model="game.opponent" value="{{game.opponent}}" placeholder="Opponent">
-              <br />
-              <input type="text" class="form-control" id="game-date" name="gameDate" ng-model="game.date" value="{{game.date}}" placeholder="Date">
-            </p>
-            <a href="" class="btn btn-success" ng-click="createNewGame(game)">Create Game</a>
-            <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
+        </div>
+        <div ng-show="showNewGameForm">
+          <div class="form-group" ng-class="{ 'has-error': newGame.gameOpponent.$touched && newGame.gameOpponent.$invalid }">
+            <input
+              type="text"
+              class="form-control"
+              name="gameOpponent"
+              ng-model="game.opponent"
+              ng-pattern="/^[\sa-zA-Z0-9]*$/"
+              placeholder="Opponent"
+              required />
+            <div ng-messages="newGame.gameOpponent.$error" ng-show="newGame.gameOpponent.$touched">
+              <p ng-message="pattern">Opponent contains an invalid character</p>
+              <p ng-message="required">Please enter an Opponent</p>
+            </div>
           </div>
+          <div class="form-group" ng-class="{ 'has-error': newGame.gameDate.$touched && newGame.gameDate.$invalid }">
+            <input
+              type="text"
+              class="form-control"
+              id="game-date"
+              name="gameDate"
+              ng-model="game.date"
+              placeholder="Date"
+              required />
+            <div ng-messages="newGame.gameDate.$error" ng-show="newGame.gameDate.$touched">
+              <p ng-message="required">Please enter a Date</p>
+            </div>
+          </div>
+          <a href="" class="btn btn-success" ng-click="createNewGame(game)">Create Game</a>
+          <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
         </div>
       </form>
     </div>
@@ -24,10 +44,8 @@
         <h3 class="panel-title">Games</h3>
       </div>
       <div class="panel-body">
-        <div class="list-group">
-          <a href="#" class="list-group-item">10/31/2015 Eau Claire Eagles</a>
-          <a href="#" class="list-group-item">10/31/2015 St. Croix Falls</a>
-          <a href="#" class="list-group-item">10/31/2015 Ladysmith</a>
+        <div ng-repeat="game in staticGames" class="list-group">
+          <a href="#/game/{{game.key}}" class="list-group-item">{{game.opponent}}</a>
         </div>
       </div>
     </div>

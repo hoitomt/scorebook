@@ -1,3 +1,15 @@
-<div class="jumbotron text-center">
-  <h1>Game Page</h1>
+<div class="panel" ng-controller="gameController">
+
+  <div class="panel-body">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{game.opponent}} - {{game.date}}</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-repeat="player in game.players" class="list-group">
+          <p>{{player.name}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

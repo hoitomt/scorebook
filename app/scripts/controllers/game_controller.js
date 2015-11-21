@@ -1,19 +1,23 @@
-app.controller('gameController', function($scope, $route, $routeParams, $location, GameFactory) {
+app.controller('gameController', function($scope, $route, $routeParams, $location, GameFactory, PlayerFactory) {
   if($route.current.routeName == 'game' && $routeParams.id) {
-    console.log("Game ID: " + $routeParams.id);
+    var gameKey = $routeParams.id
+    console.log("Game ID: " + gameKey);
+    $scope.game = GameFactory.find(gameKey);
   }
 
-  $scope.message = "Welcome to the Arena";
   $scope.showNewGameForm = false;
-
-  resetOpponent();
+  $scope.staticGames = GameFactory.games(5);
 
   $scope.createNewGame = function(gameParams) {
     console.log("Opponent: ", gameParams);
-    var game = new GameFactory(gameParams);
-    game.create();
+    if(angular.isUndefined(gameParams.opponent) || angular.isUndefined(gameParams.date)) {
+      console.log("Invalid Game Create");
+    } else {
+      var game = new GameFactory(gameParams);
+      game.create();
 
-    $location.path('/game/' + game.key);
+      $location.path('/game/' + game.key);
+    }
   }
 
   $scope.cancelCreateGame = function() {
@@ -22,6 +26,6 @@ app.controller('gameController', function($scope, $route, $routeParams, $locatio
   }
 
   function resetOpponent() {
-    $scope.opponent = {name: ""};
+    $scope.game = {opponent: "", date: ""};
   }
 });
