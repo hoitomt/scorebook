@@ -1,13 +1,26 @@
 <div class="panel" ng-controller="gameController">
-
+  <div class="panel-heading">
+    <h3 class="panel-title">{{game.opponent}} - {{game.date}}</h3>
+  </div>
   <div class="panel-body">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{game.opponent}} - {{game.date}}</h3>
-      </div>
-      <div class="panel-body">
-        <div ng-repeat="player in game.players" class="list-group">
-          <p>{{player.name}}</p>
+    <div ng-repeat="player in game.players" class="list-group">
+      <div class="list-group-item">
+        <p>
+          <span class="h4">{{player.name}}</span>
+          <span>p: {{player.totalPoints()}} | </span>
+          <span>a: {{player.assists}} | </span>
+          <span>r: {{player.rebounds}} | </span>
+          <span>t: {{player.turnovers}} | </span>
+          <span>f: {{player.fouls}}</span>
+        </p>
+        <div>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 1)">+1</a>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 2)">+2</a>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 3)">+3</a>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addAssist(game, player)">+1 Assist</a>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addRebound(game, player)">+1 Rebound</a>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addTurnover(game, player)">+1 Turnover</a>
+          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addFoul(game, player)">+1 Foul</a>
         </div>
       </div>
     </div>

@@ -3,29 +3,36 @@ app.controller('gameController', function($scope, $route, $routeParams, $locatio
     var gameKey = $routeParams.id
     console.log("Game ID: " + gameKey);
     $scope.game = GameFactory.find(gameKey);
+  };
+
+  $scope.addScore = function(game, player, amount) {
+    console.log("Add Score Player: ", player, " Amount: ", amount);
+    player.addScore(amount);
+    game.save();
+  };
+
+  $scope.addRebound = function(game, player) {
+    console.log("Add Rebound Player: ", player);
+    player.addRebound();
+    game.save();
   }
 
-  $scope.showNewGameForm = false;
-  $scope.staticGames = GameFactory.games(5);
-
-  $scope.createNewGame = function(gameParams) {
-    console.log("Opponent: ", gameParams);
-    if(angular.isUndefined(gameParams.opponent) || angular.isUndefined(gameParams.date)) {
-      console.log("Invalid Game Create");
-    } else {
-      var game = new GameFactory(gameParams);
-      game.create();
-
-      $location.path('/game/' + game.key);
-    }
+  $scope.addAssist = function(game, player) {
+    console.log("Add Assist Player: ", player);
+    player.addAssist();
+    game.save();
   }
 
-  $scope.cancelCreateGame = function() {
-    resetOpponent();
-    $scope.showNewGameForm = false;
+  $scope.addTurnover = function(game, player) {
+    console.log("Add Turnover Player: ", player);
+    player.addTurnover();
+    game.save();
   }
 
-  function resetOpponent() {
-    $scope.game = {opponent: "", date: ""};
+  $scope.addFoul = function(game, player) {
+    console.log("Add Foul Player: ", player);
+    player.addFoul();
+    game.save();
   }
+
 });

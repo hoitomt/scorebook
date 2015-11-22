@@ -6,8 +6,15 @@ app.factory('GameFactory', function(PlayerFactory) {
     this.occurrence = args.occurrence || 1;
     this.date = args.date;
     this.opponent = args.opponent;
-    this.key = this.createKey();
-    this.players = createPlayers();
+    this.key = args.key || this.createKey();
+    this.players = new Array;
+    if(angular.isUndefined(args.players) || args.players.length <= 0) {
+      this.players = createPlayers();
+    } else {
+      for(player of args.players) {
+        this.players.push(new PlayerFactory(player));
+      }
+    }
   };
 
   GameFactory.prototype.create = function() {
@@ -50,11 +57,10 @@ app.factory('GameFactory', function(PlayerFactory) {
   };
 
   GameFactory.prototype.addLocalStorageKey = function(key) {
-    var existingKeys = GameFactory.localStorageKeys();
     var occurrence = 1;
 
     // Check for key
-    while(GameFactory.find(key) != null) {
+    while(localStorage[key] != null) {
       // increment the occurrence in the key
       var keyArray = key.split('_');
       occurrence = parseInt(keyArray.pop()) + 1;
@@ -64,6 +70,7 @@ app.factory('GameFactory', function(PlayerFactory) {
     this.occurrence = occurrence;
     this.key = key;
 
+    var existingKeys = GameFactory.localStorageKeys();
     existingKeys.push(key);
     localStorage.setItem(localStorageIndexKey, angular.toJson(existingKeys));
   };
@@ -72,6 +79,7 @@ app.factory('GameFactory', function(PlayerFactory) {
     var rawGame = localStorage.getItem(key);
     if(rawGame) {
       var game = angular.fromJson(rawGame);
+      game.key = key;
       return new GameFactory(game);
     } else {
       return null;

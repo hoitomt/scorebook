@@ -3,8 +3,8 @@ app.factory('PlayerFactory', function() {
   var PlayerFactory = function(args) {
     this.name = args.name;
     this.number = args.number;
-    this.freeThrowAttempts = args.freeThrowAttempts || 0;
-    this.freeThrows = args.freeThrows || 0;
+    this.onePointAttempts = args.onePointAttempts || 0;
+    this.onePointBaskets = args.onePointBaskets || 0;
     this.twoPointAttempts = args.twoPointAttempts || 0;
     this.twoPointBaskets = args.twoPointBaskets || 0;
     this.threePointAttempts = args.threePointAttempts || 0;
@@ -19,8 +19,8 @@ app.factory('PlayerFactory', function() {
     return {
       name: this.name,
       number: this.number,
-      freeThrowAttempts: this.freeThrowAttempts,
-      freeThrows: this.freeThrows,
+      onePointAttempts: this.onePointAttempts,
+      onePointBaskets: this.onePointBaskets,
       twoPointAttempts: this.twoPointAttempts,
       twoPointBaskets: this.twoPointBaskets,
       threePointAttempts: this.threePointAttempts,
@@ -35,6 +35,38 @@ app.factory('PlayerFactory', function() {
   PlayerFactory.prototype.serializedValues = function() {
     return angular.toJson(this.values());
   };
+
+  PlayerFactory.prototype.addScore = function(amount) {
+    if(amount == 1) {
+      this.onePointBaskets += 1;
+    } else if(amount == 2) {
+      this.twoPointBaskets += 1;
+    } else if(amount == 3) {
+      this.threePointBaskets += 1;
+    } else {
+      // Unknown score amount
+    }
+  }
+
+  PlayerFactory.prototype.addRebound = function() {
+    this.rebounds += 1;
+  }
+
+  PlayerFactory.prototype.addAssist = function() {
+    this.assists += 1;
+  }
+
+  PlayerFactory.prototype.addTurnover = function() {
+    this.turnovers += 1;
+  }
+
+  PlayerFactory.prototype.addFoul = function() {
+    this.fouls += 1;
+  }
+
+  PlayerFactory.prototype.totalPoints = function() {
+    return this.onePointBaskets * 1 + this.twoPointBaskets * 2 + this.threePointBaskets * 3
+  }
 
   return PlayerFactory;
 });

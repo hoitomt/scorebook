@@ -6,11 +6,6 @@ app.config(function($routeProvider) {
       templateUrl: 'pages/home.html',
       controller: 'mainController'
     })
-    .when('/game', {
-      templateUrl: 'pages/game.html',
-      controller: 'gameController',
-      routeName: 'game'
-    })
     .when('/game/:id', {
       templateUrl: 'pages/game.html',
       controller: 'gameController',
