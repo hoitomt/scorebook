@@ -5,23 +5,50 @@
   <div class="panel-body">
     <div ng-repeat="player in game.players" class="list-group">
       <div class="list-group-item">
-        <p>
-          <span class="h4">{{player.name}}</span>
-          <span>p: {{player.totalPoints()}} | </span>
-          <span>a: {{player.assists}} | </span>
-          <span>r: {{player.rebounds}} | </span>
-          <span>t: {{player.turnovers}} | </span>
-          <span>f: {{player.fouls}}</span>
-        </p>
-        <div>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 1)">+1</a>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 2)">+2</a>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 3)">+3</a>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addAssist(game, player)">+1 Assist</a>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addRebound(game, player)">+1 Rebound</a>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addTurnover(game, player)">+1 Turnover</a>
-          <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addFoul(game, player)">+1 Foul</a>
-        </div>
+        <div class="container"></div>
+          <div class="row">
+            <div class="col-xs-8">
+              <span class="h4">{{player.name}}</span>
+              <span>p: {{player.totalPoints()}} | </span>
+              <span>a: {{player.assists}} | </span>
+              <span>r: {{player.rebounds}} | </span>
+              <span>t: {{player.turnovers}} | </span>
+              <span>f: {{player.fouls}}</span>
+            </div>
+            <div class="col-xs-4 pull-right">
+              <span class="pull-right">
+                <a ng-click="showCorrectionPanel = !showCorrectionPanel" class="btn btn-primary btn" href="">
+                  <span ng-if="showCorrectionPanel">Hide Corrections</span>
+                  <span ng-if="!showCorrectionPanel">Correction</span>
+                </a>
+              </span>
+              <span class="pull-right">
+                <a ng-click="moveToBench(player)" class="btn btn-primary btn right-spacing" href="">Bench</a>
+              </span>
+            </div>
+          </div class="row">
+          <div class="row top-buffer" ng-show="showCorrectionPanel">
+            <div class="col-xs-12">
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeScore(game, player, 1)">-1</a>
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeScore(game, player, 2)">-2</a>
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeScore(game, player, 3)">-3</a>
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeAssist(game, player)">-1 Assist</a>
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeRebound(game, player)">-1 Rebound</a>
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeTurnover(game, player)">-1 Turnover</a>
+              <a class="btn btn-danger btn-lg right-spacing" href="" ng-click="removeFoul(game, player)">-1 Foul</a>
+            </div>
+          </div>
+          <div class="row top-buffer">
+            <div class="col-xs-12">
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 1)">+1</a>
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 2)">+2</a>
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addScore(game, player, 3)">+3</a>
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addAssist(game, player)">+1 Assist</a>
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addRebound(game, player)">+1 Rebound</a>
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addTurnover(game, player)">+1 Turnover</a>
+              <a class="btn btn-success btn-lg right-spacing" href="" ng-click="addFoul(game, player)">+1 Foul</a>
+            </div>
+          </div>
       </div>
     </div>
   </div>

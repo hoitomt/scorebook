@@ -1,38 +1,56 @@
 app.controller('gameController', function($scope, $route, $routeParams, $location, GameFactory, PlayerFactory) {
+
+  $scope.showCorrectionPanel = false;
+
   if($route.current.routeName == 'game' && $routeParams.id) {
     var gameKey = $routeParams.id
     console.log("Game ID: " + gameKey);
     $scope.game = GameFactory.find(gameKey);
   };
 
+  $scope.moveToBench = function(player) {
+
+  };
+
   $scope.addScore = function(game, player, amount) {
-    console.log("Add Score Player: ", player, " Amount: ", amount);
-    player.addScore(amount);
-    game.save();
+    player.addScore(amount); game.save();
   };
 
   $scope.addRebound = function(game, player) {
-    console.log("Add Rebound Player: ", player);
-    player.addRebound();
-    game.save();
+    player.addRebound(); game.save();
   }
 
   $scope.addAssist = function(game, player) {
-    console.log("Add Assist Player: ", player);
-    player.addAssist();
-    game.save();
+    player.addAssist(); game.save();
   }
 
   $scope.addTurnover = function(game, player) {
-    console.log("Add Turnover Player: ", player);
-    player.addTurnover();
-    game.save();
+    player.addTurnover(); game.save();
   }
 
   $scope.addFoul = function(game, player) {
-    console.log("Add Foul Player: ", player);
-    player.addFoul();
-    game.save();
+    player.addFoul(); game.save();
+  }
+
+  // Corrections
+  $scope.removeScore = function(game, player, amount) {
+    player.removeScore(amount); game.save();
+  };
+
+  $scope.removeRebound = function(game, player) {
+    player.removeRebound(); game.save();
+  }
+
+  $scope.removeAssist = function(game, player) {
+    player.removeAssist(); game.save();
+  }
+
+  $scope.removeTurnover = function(game, player) {
+    player.removeTurnover(); game.save();
+  }
+
+  $scope.removeFoul = function(game, player) {
+    player.removeFoul(); game.save();
   }
 
 });

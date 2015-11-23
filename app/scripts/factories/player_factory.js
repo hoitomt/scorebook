@@ -68,5 +68,33 @@ app.factory('PlayerFactory', function() {
     return this.onePointBaskets * 1 + this.twoPointBaskets * 2 + this.threePointBaskets * 3
   }
 
+  PlayerFactory.prototype.removeScore = function(amount) {
+    if(amount == 1) {
+      this.onePointBaskets = this.onePointBaskets >= 1 ? this.onePointBaskets - 1 : 0;
+    } else if(amount == 2) {
+      this.twoPointBaskets = this.twoPointBaskets >= 1 ? this.twoPointBaskets - 1 : 0;
+    } else if(amount == 3) {
+      this.threePointBaskets = this.threePointBaskets >= 1 ? this.threePointBaskets - 1 : 0;
+    } else {
+      // Unknown score amount
+    }
+  }
+
+  PlayerFactory.prototype.removeRebound = function() {
+    this.rebounds = this.rebounds >= 1 ? this.rebounds - 1 : 0;
+  }
+
+  PlayerFactory.prototype.removeAssist = function() {
+    this.assists = this.assists >= 1 ? this.assists - 1 : 0;
+  }
+
+  PlayerFactory.prototype.removeTurnover = function() {
+    this.turnovers = this.turnovers >= 1 ? this.turnovers - 1 : 0;
+  }
+
+  PlayerFactory.prototype.removeFoul = function() {
+    this.fouls = this.fouls >= 1 ? this.fouls - 1 : 0;
+  }
+
   return PlayerFactory;
 });
