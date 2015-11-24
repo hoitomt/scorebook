@@ -8,11 +8,22 @@ app.factory('GameFactory', function(PlayerFactory) {
     this.opponent = args.opponent;
     this.key = args.key || this.createKey();
     this.players = new Array;
+
+    this.inGamePlayers = new Array;
+    this.benchPlayers = new Array;
     if(angular.isUndefined(args.players) || args.players.length <= 0) {
       this.players = createPlayers();
     } else {
       for(player of args.players) {
         this.players.push(new PlayerFactory(player));
+      }
+    }
+
+    for(player of this.players) {
+      if(player.inGame) {
+        this.inGamePlayers.push(player)
+      } else {
+        this.benchPlayers.push(player);
       }
     }
   };
@@ -75,6 +86,18 @@ app.factory('GameFactory', function(PlayerFactory) {
     localStorage.setItem(localStorageIndexKey, angular.toJson(existingKeys));
   };
 
+  GameFactory.prototype.updatePlayerStatus = function() {
+    this.inGamePlayers = this.players.filter(function(player) {
+      return player.inGame;
+    });
+
+    this.benchPlayers = this.players.filter(function(player) {
+      return !player.inGame;
+    });
+
+    this.save();
+  }
+
   GameFactory.find = function(key) {
     var rawGame = localStorage.getItem(key);
     if(rawGame) {
@@ -112,7 +135,7 @@ app.factory('GameFactory', function(PlayerFactory) {
 
   function createPlayers() {
     var players = [
-      new PlayerFactory({name: 'Anna Hoitomt', number: '11'}),
+      new PlayerFactory({name: 'Anna Hoitomt', number: '11', inGame: true}),
       new PlayerFactory({name: 'Adrienne Morning', number: '4'})
     ]
     return players;

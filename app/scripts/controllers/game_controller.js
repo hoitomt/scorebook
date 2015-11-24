@@ -8,9 +8,13 @@ app.controller('gameController', function($scope, $route, $routeParams, $locatio
     $scope.game = GameFactory.find(gameKey);
   };
 
-  $scope.moveToBench = function(player) {
-
+  $scope.moveToBench = function(game, player) {
+    player.inGame = false; game.updatePlayerStatus();
   };
+
+  $scope.putInGame = function(game, player) {
+    player.inGame = true; game.updatePlayerStatus();
+  }
 
   $scope.addScore = function(game, player, amount) {
     player.addScore(amount); game.save();

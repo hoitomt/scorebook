@@ -13,6 +13,7 @@ app.factory('PlayerFactory', function() {
     this.rebounds = args.rebounds || 0;
     this.assists = args.assists || 0;
     this.fouls = args.fouls || 0;
+    this.inGame = args.inGame || false;
   };
 
   PlayerFactory.prototype.values = function() {
@@ -28,7 +29,8 @@ app.factory('PlayerFactory', function() {
       turnovers: this.turnovers,
       rebounds: this.rebounds,
       assists: this.assists,
-      fouls: this.fouls
+      fouls: this.fouls,
+      inGame: this.inGame
     };
   };
 
