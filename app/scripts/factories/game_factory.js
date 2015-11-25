@@ -136,7 +136,13 @@ app.factory('GameFactory', function(PlayerFactory) {
   function createPlayers() {
     var players = [
       new PlayerFactory({name: 'Anna Hoitomt', number: '11', inGame: true}),
-      new PlayerFactory({name: 'Adrienne Morning', number: '4'})
+      new PlayerFactory({name: 'Adrienne Morning', number: '4', inGame: true}),
+      new PlayerFactory({name: 'Emma Vinopal', number: '1', inGame: true}),
+      new PlayerFactory({name: 'Caitlyn Klink', number: '32', inGame: true}),
+      new PlayerFactory({name: 'Katie Andrews', number: 'x', inGame: true}),
+      new PlayerFactory({name: 'Jessica Sabbagh', number: '23', inGame: false}),
+      new PlayerFactory({name: 'Ariana Smith', number: '25', inGame: false}),
+      new PlayerFactory({name: 'Anna Allen', number: 'y', inGame: false}),
     ]
     return players;
   };
