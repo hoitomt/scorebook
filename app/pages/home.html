@@ -1,52 +1,55 @@
-<div class="panel" ng-controller="gameIndexController">
-  <div class="panel-body">
-    <div>
-      <!-- Use novalidate so that angular validations are boss -->
+<div class="container" ng-controller="gameIndexController">
+  <div class="row bottom-buffer-20">
+    <div class="col-sm-6">
+      <h3 style="margin-top: 15px;">Games</h3>
+    </div>
+    <div class="col-sm-6">
+      <span class="pull-right">
+        <a ng-click="showNewGameForm = !showNewGameForm" href="" class="btn btn-success">New Game</a>
+      </span>
+    </div>
+  </div>
+  <div class="row" ng-show="showNewGameForm">
+    <div class="col-sm-12">
       <form name="newGame" novalidate>
-        <div ng-show="!showNewGameForm">
-          <p><a ng-click="showNewGameForm = !showNewGameForm" href="" class="btn btn-success">New Game</a></p>
-        </div>
-        <div ng-show="showNewGameForm">
-          <div class="form-group" ng-class="{ 'has-error': newGame.gameOpponent.$touched && newGame.gameOpponent.$invalid }">
-            <input
-              type="text"
-              class="form-control"
-              name="gameOpponent"
-              ng-model="game.opponent"
-              ng-pattern="/^[\sa-zA-Z0-9]*$/"
-              placeholder="Opponent"
-              required />
-            <div ng-messages="newGame.gameOpponent.$error" ng-show="newGame.gameOpponent.$touched">
-              <p ng-message="pattern">Opponent contains an invalid character</p>
-              <p ng-message="required">Please enter an Opponent</p>
-            </div>
+        <div class="form-group" ng-class="{ 'has-error': newGame.gameOpponent.$touched && newGame.gameOpponent.$invalid }">
+          <input
+            type="text"
+            class="form-control"
+            name="gameOpponent"
+            ng-model="game.opponent"
+            ng-pattern="/^[\sa-zA-Z0-9]*$/"
+            placeholder="Opponent"
+            required />
+          <div ng-messages="newGame.gameOpponent.$error" ng-show="newGame.gameOpponent.$touched">
+            <p ng-message="pattern">Opponent contains an invalid character</p>
+            <p ng-message="required">Please enter an Opponent</p>
           </div>
-          <div class="form-group" ng-class="{ 'has-error': newGame.gameDate.$touched && newGame.gameDate.$invalid }">
-            <input
-              type="text"
-              class="form-control"
-              id="game-date"
-              name="gameDate"
-              ng-model="game.date"
-              placeholder="Date"
-              required />
-            <div ng-messages="newGame.gameDate.$error" ng-show="newGame.gameDate.$touched">
-              <p ng-message="required">Please enter a Date</p>
-            </div>
-          </div>
-          <a href="" class="btn btn-success" ng-click="createNewGame(game)">Create Game</a>
-          <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
         </div>
+        <div class="form-group" ng-class="{ 'has-error': newGame.gameDate.$touched && newGame.gameDate.$invalid }">
+          <input
+            type="text"
+            class="form-control"
+            id="game-date"
+            name="gameDate"
+            ng-model="game.date"
+            placeholder="Date"
+            required />
+          <div ng-messages="newGame.gameDate.$error" ng-show="newGame.gameDate.$touched">
+            <p ng-message="required">Please enter a Date</p>
+          </div>
+        </div>
+        <a href="" class="btn btn-success" ng-click="createNewGame(game)">Create Game</a>
+        <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
       </form>
     </div>
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title">Games</h3>
-      </div>
-      <div class="panel-body">
-        <div ng-repeat="game in staticGames" class="list-group">
-          <a href="#/game/{{game.key}}" class="list-group-item">{{game.opponent}}</a>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="list-group">
+        <a ng-repeat="game in staticGames" href="#/game/{{game.key}}" class="list-group-item list-well">
+          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h3>
+        </a>
       </div>
     </div>
   </div>
