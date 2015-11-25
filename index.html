@@ -1,9 +1,44 @@
 <!DOCTYPE>
-<<html>
+<html ng-app="scorebook">
 <head>
-  <title>Root</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scorebook</title>
+  <link rel="stylesheet" type="text/css" href="app/styles/main.css">
+  <link rel="stylesheet" type="text/css" href="app/styles/vendor/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="app/styles/vendor/pickadate/default.css">
+  <link rel="stylesheet" type="text/css" href="app/styles/vendor/pickadate/default.date.css">
+
+  <script src="app/scripts/vendor/jquery-1.11.3.min.js"></script>
+  <script src="app/scripts/vendor/bootstrap.min.js"></script>
+  <script src="app/scripts/vendor/angular.min.js"></script>
+  <script src="app/scripts/vendor/angular-route.min.js"></script>
+  <script src="app/scripts/vendor/angular-messages.js"></script>
+  <script src="app/scripts/vendor/pickadate/picker.js"></script>
+  <script src="app/scripts/vendor/pickadate/picker.date.js"></script>
+  <script src="app/scripts/main.js"></script>
+  <script src="app/scripts/factories/player_factory.js"></script>
+  <script src="app/scripts/factories/game_factory.js"></script>
+  <script src="app/scripts/controllers/game_index_controller.js"></script>
+  <script src="app/scripts/controllers/game_controller.js"></script>
+  <script src="app/scripts/controllers/main_controller.js"></script>
 </head>
 <body>
+  <header>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#/">Scorebook</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <div id="main">
+    <!-- angular templating -->
+    <div ng-view></div>
+  </div>
 
 </body>
 </html>

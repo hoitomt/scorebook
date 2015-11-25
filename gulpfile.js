@@ -9,9 +9,9 @@ gulp.task('default', function() {
 gulp.task('serve', function() {
   browserSync({
     server: {
-      baseDir: 'app'
+      // baseDir: 'app'
     }
   });
 
-  gulp.watch(['*.html', 'styles/**/*.css', 'scripts/**/*.js', ], {cwd: 'app'}, reload);
+  gulp.watch(['*.html', 'app/pages/**/*.html', 'app/styles/**/*.css', 'app/scripts/**/*.js', ], {}, reload);
 });
