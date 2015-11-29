@@ -1,0 +1,35 @@
+<div class="container" ng-controller="loginController">
+  <div class="row">
+    <div class="col-sm-12">
+      <h3>Login</h3>
+      <p ng-show="errorMessages != null">{{errorMessages}}</p>
+      <form name="login" novalidate>
+        <div class="form-group" ng-class="{ 'has-error': login.userEmail.$touched && login.userEmail.$invalid }">
+          <input
+            type="text"
+            class="form-control"
+            name="userEmail"
+            ng-model="user.email"
+            placeholder="Email Address"
+            required />
+          <div ng-messages="login.userEmail.$error" ng-show="login.userEmail.$touched">
+            <p ng-message="required">Please enter an Email Address</p>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': login.userPassword.$touched && login.userPassword.$invalid }">
+          <input
+            type="password"
+            class="form-control"
+            name="userPassword"
+            ng-model="user.password"
+            placeholder="Password"
+            required />
+          <div ng-messages="login.userPassword.$error" ng-show="login.userPassword.$touched">
+            <p ng-message="required">Please enter a Password</p>
+          </div>
+        </div>
+        <a href="" class="btn btn-success right-spacing" ng-click="loginUser(user)">Login</a>
+      </form>
+    </div>
+  </div>
+</div>
