@@ -19,15 +19,17 @@
   <script src="app/scripts/vendor/pickadate/picker.js"></script>
   <script src="app/scripts/vendor/pickadate/picker.date.js"></script>
   <script src="app/scripts/main.js"></script>
-  <script src="app/scripts/services/network_sniffer_service.js"></script>
   <script src="app/scripts/services/authentication_service.js"></script>
-  <script src="app/scripts/factories/player_factory.js"></script>
+  <script src="app/scripts/services/network_sniffer_service.js"></script>
+  <script src="app/scripts/services/route_service.js"></script>
   <script src="app/scripts/factories/game_factory.js"></script>
+  <script src="app/scripts/factories/player_factory.js"></script>
   <script src="app/scripts/factories/user_factory.js"></script>
-  <script src="app/scripts/controllers/game_index_controller.js"></script>
   <script src="app/scripts/controllers/game_controller.js"></script>
-  <script src="app/scripts/controllers/main_controller.js"></script>
+  <script src="app/scripts/controllers/game_index_controller.js"></script>
   <script src="app/scripts/controllers/login_controller.js"></script>
+  <script src="app/scripts/controllers/main_controller.js"></script>
+  <script src="app/scripts/controllers/register_controller.js"></script>
 </head>
 <body>
   <header>
@@ -37,7 +39,8 @@
           <a class="navbar-brand" href="#/">Scorebook</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+          <li ng-show="isLoggedIn"><a href="#/logout"><i class="fa fa-logout"></i> Logout</a></li>
+          <li ng-show="!isLoggedIn"><a href="#/register"><i class="fa fa-register"></i> Register</a></li>
         </ul>
       </div>
     </nav>

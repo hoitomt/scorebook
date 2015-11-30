@@ -1,10 +1,16 @@
-app.controller('loginController', function($scope, $location, UserFactory) {
+app.controller('loginController', function($scope, $rootScope, $location, $route, UserFactory) {
   resetErrorMessages();
+
+  if($route.current.routeName == 'logout') {
+    console.log("Logout");
+    UserFactory.logout();
+    $rootScope.isLoggedIn = false
+  };
 
   $scope.user = {
     email: '',
     password: ''
-  }
+  };
 
   function resetErrorMessages() {
     $scope.errorMessages = null;
@@ -22,4 +28,8 @@ app.controller('loginController', function($scope, $location, UserFactory) {
       $scope.errorMessages = reject;
     });
   };
+
+  $scope.isLoggedIn = function() {
+    UserFactory.isLoggedIn();
+  }
 });

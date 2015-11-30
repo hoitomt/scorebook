@@ -1,4 +1,4 @@
-app.controller('gameIndexController', function($scope, $route, $routeParams, $location, GameFactory, PlayerFactory) {
+app.controller('gameIndexController', function($scope, $location, GameFactory, PlayerFactory) {
   $scope.showNewGameForm = false;
   $scope.staticGames = GameFactory.games(5);
 

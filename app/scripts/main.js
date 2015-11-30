@@ -1,5 +1,9 @@
 var app = angular.module('scorebook', ['ngRoute', 'ngMessages', 'ngCookies']);
 
+app.constant('Config', {
+  'DB_NAME': 'scorebook'
+})
+
 app.config(function($routeProvider) {
   $routeProvider
     .when('/', {
@@ -15,37 +19,21 @@ app.config(function($routeProvider) {
       templateUrl: 'app/pages/login.html',
       controller: 'loginController'
     })
+    .when('/logout', {
+      templateUrl: 'app/pages/login.html',
+      controller: 'loginController',
+      routeName: 'logout'
+    })
+    .when('/register', {
+      templateUrl: 'app/pages/register.html',
+      controller: 'registerController'
+    })
     .otherwise({
       redirectTo: '/'
     });
 });
 
 // Copied from this guy: http://arthur.gonigberg.com/2013/06/29/angularjs-role-based-auth/
-app.run(function ($rootScope, $location, AuthenticationService, NetworkSnifferService) {
-
-  // enumerate routes that don't need authentication
-  var routesThatDontRequireAuth = ['/login'];
-
-  // check if current location matches route
-  var routeClean = function (route) {
-    return _.find(routesThatDontRequireAuth,
-      function (noAuthRoute) {
-        return s.startsWith(route, noAuthRoute);
-      });
-  };
-
-  $rootScope.$on('$routeChangeStart', function (event, next, current) {
-    // if route requires auth and user is not logged in
-    if (!routeClean($location.url()) && !AuthenticationService.isAuthenticated()) {
-
-      NetworkSnifferService.testConnection().then(function(resolve) {
-        console.log("The device is connected");
-        // redirect back to login
-        $location.path('/login');
-      }, function(reject) {
-        // Do not redirect to a login page if there isn't a connection - assume authenticated
-        console.log("The device is not connected");
-      });
-    }
-  });
+app.run(function ($rootScope, RouteService) {
+  RouteService.authenticate();
 });

@@ -1,0 +1,59 @@
+<div class="container" ng-controller="loginController">
+  <div class="row">
+    <div class="col-sm-12">
+      <h3>Register</h3>
+      <p ng-show="errorMessages != null">{{errorMessages}}</p>
+      <form name="register" novalidate>
+        <div class="form-group" ng-class="{ 'has-error': register.firstName.$touched && register.firstName.$invalid }">
+          <input
+            type="text"
+            class="form-control"
+            name="firstName"
+            ng-model="user.firstName"
+            placeholder="First Name"
+            required />
+          <div ng-messages="register.firstName.$error" ng-show="register.firstName.$touched">
+            <p ng-message="required">Please enter an First Name</p>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': register.lastName.$touched && register.lastName.$invalid }">
+          <input
+            type="text"
+            class="form-control"
+            name="lastName"
+            ng-model="user.lastName"
+            placeholder="Last Name"
+            required />
+          <div ng-messages="register.lastName.$error" ng-show="register.lastName.$touched">
+            <p ng-message="required">Please enter an Last Name</p>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': register.userEmail.$touched && register.userEmail.$invalid }">
+          <input
+            type="text"
+            class="form-control"
+            name="userEmail"
+            ng-model="user.email"
+            placeholder="Email Address"
+            required />
+          <div ng-messages="register.userEmail.$error" ng-show="register.userEmail.$touched">
+            <p ng-message="required">Please enter an Email Address</p>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': register.userPassword.$touched && register.userPassword.$invalid }">
+          <input
+            type="password"
+            class="form-control"
+            name="userPassword"
+            ng-model="user.password"
+            placeholder="Password"
+            required />
+          <div ng-messages="register.userPassword.$error" ng-show="register.userPassword.$touched">
+            <p ng-message="required">Please enter a Password</p>
+          </div>
+        </div>
+        <a href="" class="btn btn-success right-spacing" ng-click="registerUser(user)">Register</a>
+      </form>
+    </div>
+  </div>
+</div>
