@@ -1,3 +1,24 @@
+<div class="container" ng-controller="teamsController">
+  <div class="row bottom-buffer-20">
+    <div class="col-sm-6">
+      <h3 style="margin-top: 15px;">Teams</h3>
+    </div>
+    <div class="col-sm-6">
+      <span class="pull-right">
+        <a href="#/teams/new" class="btn btn-success">New Team</a>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="list-group">
+        <a ng-repeat="team in teams" href="#/teams/{{team.key}}" class="list-group-item list-well">
+          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{team.name}}</h3>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container" ng-controller="gameIndexController">
   <div class="row bottom-buffer-20">
     <div class="col-sm-6">
@@ -39,7 +60,7 @@
             <p ng-message="required">Please enter a Date</p>
           </div>
         </div>
-        <a href="" class="btn btn-success" ng-click="createNewGame(game)">Create Game</a>
+        <a href="" class="btn btn-success right-spacing" ng-click="createNewGame(game)">Create Game</a>
         <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
       </form>
     </div>

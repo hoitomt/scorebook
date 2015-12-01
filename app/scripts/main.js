@@ -28,6 +28,15 @@ app.config(function($routeProvider) {
       templateUrl: 'app/pages/register.html',
       controller: 'registerController'
     })
+    .when('/teams/new', {
+      templateUrl: 'app/pages/teams/new.html',
+      controller: 'teamsController'
+    })
+    .when('/teams/:id', {
+      templateUrl: 'app/pages/teams/edit.html',
+      controller: 'teamsController',
+      routeName: 'team'
+    })
     .otherwise({
       redirectTo: '/'
     });

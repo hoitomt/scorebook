@@ -10,6 +10,11 @@ app.factory('UserFactory', function($http, $cookies, $q) {
 
   UserFactory.logout = function() {
     $cookies.remove('apiKey');
+    $cookies.remove('userId');
+  }
+
+  UserFactory.userId = function() {
+    return $cookies.get('userId')
   }
 
   UserFactory.prototype.loginParameters = function() {
@@ -32,8 +37,10 @@ app.factory('UserFactory', function($http, $cookies, $q) {
       .then(function(response){
         console.log("Success Response: ", response);
         var apiKey = response.data.api_key;
+        var userId = response.data.user_id;
         if(apiKey) {
           $cookies.put('apiKey', apiKey);
+          $cookies.put('userId', userId);
           deferred.resolve();
         } else {
           deferred.reject('Missing API Key')
@@ -54,8 +61,10 @@ app.factory('UserFactory', function($http, $cookies, $q) {
       .then(function(response){
         console.log("Success Response: ", response);
         var apiKey = response.data.api_key;
+        var userId = response.data.user_id;
         if(apiKey) {
           $cookies.put('apiKey', apiKey);
+          $cookies.put('userId', userId);
           deferred.resolve();
         } else {
           deferred.reject('Missing API Key')

@@ -1,0 +1,56 @@
+<div class="container" ng-controller="teamsController">
+  <div class="row">
+    <h1>Add Players to {{team.name}}</h1>
+  </div>
+  <div class="row">
+    <form id="teamRoster" class="form-inline">
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control right-spacing"
+          name="playerNumber"
+          ng-model="player.number"
+          ng-pattern="/^[0-9]*$/"
+          placeholder="Number"
+          required />
+        <div ng-messages="teamRoster.playerNumber.$error" ng-show="teamRoster.playerNumber.$touched">
+          <p ng-message="pattern">Number contains an invalid character</p>
+          <p ng-message="required">Please enter a Number</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control right-spacing"
+          name="playerName"
+          ng-model="player.name"
+          ng-pattern="/^[\sa-zA-Z0-9]*$/"
+          placeholder="Name"
+          required />
+        <div ng-messages="teamRoster.playerName.$error" ng-show="teamRoster.playerName.$touched">
+          <p ng-message="pattern">Name contains an invalid character</p>
+          <p ng-message="required">Please enter a Name</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <a class="btn btn-success btn-sm" ng-click="addPlayer(team, player)">Add Player</a>
+      </div>
+    </form>
+  </div>
+  <div class="row">
+    <div class="well">
+      <table class="table">
+        <tr>
+          <th>Number</th>
+          <th>Name</th>
+          <th></th>
+        </tr>
+        <tr ng-repeat="player in team.players">
+          <td>{{player.number}}</td>
+          <td>{{player.name}}</td>
+          <td><a ng-click="removePlayer(team, player)">Remove Player</a></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
