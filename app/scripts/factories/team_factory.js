@@ -14,6 +14,7 @@ app.factory('TeamFactory', function(PlayerFactory, UserFactory) {
         this.players.push(new PlayerFactory(player));
       }
     }
+    this.sortedPlayers();
   }
 
   TeamFactory.find = function(key) {
@@ -68,14 +69,33 @@ app.factory('TeamFactory', function(PlayerFactory, UserFactory) {
     this.save();
   }
 
-  TeamFactory.prototype.removePlayer = function(player) {
+  TeamFactory.prototype.removePlayer = function(playerKey) {
     // create a new array of all players except the one you want to delete
     this.players = this.players.filter(function(existingPlayer) {
-      return existingPlayer.name === null ||
-             existingPlayer.name === "" ||
-             existingPlayer.name !== player.name
-    })
+      return existingPlayer.key !== playerKey
+    });
     this.save();
+  }
+
+  TeamFactory.prototype.findPlayer = function(playerKey) {
+    var rawPlayerArray = this.players.filter(function(existingPlayer) {
+      return existingPlayer.key == playerKey;
+    });
+    var playerArray = angular.fromJson(rawPlayerArray);
+    return new PlayerFactory(playerArray[0]);
+  }
+
+  TeamFactory.prototype.sortedPlayers = function() {
+    this.players.sort(function(a, b) {
+      if(a.number > b.number) {
+        return 1;
+      }
+      if(b.number > a.number){
+        return -1;
+      }
+      return 0;
+    });
+    return this.players;
   }
 
   TeamFactory.prototype.createKey = function() {

@@ -31,18 +31,20 @@
   <script src="app/scripts/controllers/login_controller.js"></script>
   <script src="app/scripts/controllers/main_controller.js"></script>
   <script src="app/scripts/controllers/register_controller.js"></script>
+  <script src="app/scripts/controllers/sync_controller.js"></script>
   <script src="app/scripts/controllers/teams_controller.js"></script>
 </head>
 <body>
   <header>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default" ng-controller="mainController">
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" href="#/">Scorebook</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-          <li ng-show="isLoggedIn"><a href="#/logout"><i class="fa fa-logout"></i> Logout</a></li>
-          <li ng-show="!isLoggedIn"><a href="#/register"><i class="fa fa-register"></i> Register</a></li>
+          <li ng-show="isLoggedIn"><a href="#/logout">Logout</a></li>
+          <li ng-show="!isLoggedIn"><a href="#/register">Register</a></li>
+          <li><a class="{{connectedClass}}" href="#/sync">Sync</a>
         </ul>
       </div>
     </nav>

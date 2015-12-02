@@ -18,21 +18,29 @@ app.controller('teamsController', function($scope, $route, $routeParams, $locati
     }
   };
 
-  $scope.addPlayer = function(team, playerParams) {
+  $scope.createPlayer = function(team, playerParams) {
     console.log("Add Player to Team: ", team, "Player: ", playerParams);
+    if(playerParams.key) {
+      var existingPlayer = team.findPlayer(playerParams.key);
+      if(existingPlayer) {
+        console.log("Update");
+        this.deletePlayer(team, {key: existingPlayer.key});
+      }
+    }
     var player = new PlayerFactory(playerParams)
-    team.addPlayer(player)
+    team.addPlayer(player);
+    $scope.player = null;
   }
 
-  $scope.removePlayer = function(team, playerParams) {
+  $scope.deletePlayer = function(team, playerParams) {
     console.log("Remove Player from Team: ", team, "Player: ", playerParams);
-    var player = new PlayerFactory(playerParams)
-    team.removePlayer(player)
+    team.removePlayer(playerParams.key)
   }
 
-  $scope.editPlayer = function(team, playerParams) {
-    console.log("Edit Player: ", team, "Player: ", playerParams);
-    var player = PlayerFactory.find()
+  $scope.updatePlayer = function(team, playerParams) {
+    console.log("Update Player from Team: ", team, "Player: ", playerParams);
+    var player = new PlayerFactory(playerParams);
+    $scope.player = player;
   }
 
   $scope.cancelCreateGame = function() {

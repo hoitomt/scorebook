@@ -14,6 +14,11 @@ app.factory('PlayerFactory', function() {
     this.assists = args.assists || 0;
     this.fouls = args.fouls || 0;
     this.inGame = args.inGame || false;
+    this.key = args.key || this.createKey();
+  };
+
+  PlayerFactory.prototype.createKey = function() {
+    return this.number + '_' + this.name;
   };
 
   PlayerFactory.prototype.values = function() {
@@ -30,7 +35,8 @@ app.factory('PlayerFactory', function() {
       rebounds: this.rebounds,
       assists: this.assists,
       fouls: this.fouls,
-      inGame: this.inGame
+      inGame: this.inGame,
+      key: this.key
     };
   };
 

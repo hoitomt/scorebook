@@ -8,6 +8,7 @@
         <input
           type="text"
           class="form-control right-spacing"
+          style="width: 100px;"
           name="playerNumber"
           ng-model="player.number"
           ng-pattern="/^[0-9]*$/"
@@ -33,7 +34,7 @@
         </div>
       </div>
       <div class="form-group">
-        <a class="btn btn-success btn-sm" ng-click="addPlayer(team, player)">Add Player</a>
+        <a class="btn btn-success btn-sm" ng-click="createPlayer(team, player)">Add Player</a>
       </div>
     </form>
   </div>
@@ -44,11 +45,13 @@
           <th>Number</th>
           <th>Name</th>
           <th></th>
+          <th></th>
         </tr>
-        <tr ng-repeat="player in team.players">
+        <tr ng-repeat="player in team.sortedPlayers()">
           <td>{{player.number}}</td>
           <td>{{player.name}}</td>
-          <td><a ng-click="removePlayer(team, player)">Remove Player</a></td>
+          <td><a ng-click="deletePlayer(team, player)">Remove Player</a></td>
+          <td><a ng-click="updatePlayer(team, player)">Edit Player</a></td>
         </tr>
       </table>
     </div>

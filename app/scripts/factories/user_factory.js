@@ -1,4 +1,4 @@
-app.factory('UserFactory', function($http, $cookies, $q) {
+app.factory('UserFactory', function($http, $cookies, $q, Config) {
 
   var UserFactory = function(args) {
     console.log("New User Factory", args);
@@ -33,7 +33,7 @@ app.factory('UserFactory', function($http, $cookies, $q) {
   UserFactory.prototype.login = function() {
     var deferred = $q.defer();
 
-    $http.post('http://localhost:3000/api/v1/authentication', {user: this.loginParameters()})
+    $http.post(Config.AUTH_URL, {user: this.loginParameters()})
       .then(function(response){
         console.log("Success Response: ", response);
         var apiKey = response.data.api_key;
