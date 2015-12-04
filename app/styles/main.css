@@ -1,4 +1,8 @@
-/*.btn {
+.picker table {
+  color: black;
+}
+
+.btn {
   font-size: 20px;
 }
 
@@ -26,6 +30,7 @@
   min-height: 20px;
   padding: 19px;
   background-color: #1c1e22;
+  /*border: 1px solid #0c0d0e;*/
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
   box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 }
@@ -37,4 +42,3 @@
 .navbar-default .navbar-nav>li>a.not-connected {
   color: red;
 }
-*/
