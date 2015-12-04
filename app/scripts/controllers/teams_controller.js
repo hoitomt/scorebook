@@ -1,5 +1,6 @@
 app.controller('teamsController', function($scope, $route, $routeParams, $location, TeamFactory, PlayerFactory) {
-  $scope.teams = TeamFactory.teams(5);
+  // Use for button display
+  $scope.updatePlayerState = false;
 
   if($routeParams.id) {
     var teamKey = $routeParams.id
@@ -26,6 +27,7 @@ app.controller('teamsController', function($scope, $route, $routeParams, $locati
         console.log("Update");
         this.deletePlayer(team, {key: existingPlayer.key});
       }
+      $scope.updatePlayerState = false;
     }
     var player = new PlayerFactory(playerParams)
     team.addPlayer(player);
@@ -41,6 +43,7 @@ app.controller('teamsController', function($scope, $route, $routeParams, $locati
     console.log("Update Player from Team: ", team, "Player: ", playerParams);
     var player = new PlayerFactory(playerParams);
     $scope.player = player;
+    $scope.updatePlayerState = true;
   }
 
   $scope.cancelCreateGame = function() {

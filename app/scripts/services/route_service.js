@@ -23,7 +23,6 @@ app.factory('RouteService', function($rootScope, $cookies, $location, Authentica
 
         // if route requires auth and user is not logged in
         if (!routeClean($location.url()) && !AuthenticationService.isAuthenticated()) {
-
           NetworkSnifferService.testConnection().then(function(resolve) {
             console.log("The device is connected");
             // redirect back to login

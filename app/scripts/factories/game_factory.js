@@ -123,8 +123,10 @@ app.factory('GameFactory', function(PlayerFactory) {
   };
 
   GameFactory.games = function(number) {
-    number = angular.isUndefined(number) ? 1 : number
     var gameKeys = GameFactory.localStorageKeys();
+    if(!number && gameKeys){
+      number = gameKeys.length;
+    }
     var gameArray = new Array;
     while(gameArray.length < number && gameKeys.length > 0) {
       var game = GameFactory.find(gameKeys.pop());

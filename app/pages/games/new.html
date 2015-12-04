@@ -1,36 +1,8 @@
-<div class="container" ng-controller="gameIndexController">
-  <div class="row bottom-buffer-20">
-    <div class="col-sm-6">
-      <h3 style="margin-top: 15px;">Teams</h3>
-    </div>
-    <div class="col-sm-6">
-      <span class="pull-right">
-        <a href="#/teams/new" class="btn btn-success">New Team</a>
-      </span>
-    </div>
+<div class="container" ng-controller="gamesController">
+  <div class="row">
+    <h1>New Game</h1>
   </div>
   <div class="row">
-    <div class="col-sm-12">
-      <div class="list-group">
-        <a ng-repeat="team in teams" href="#/teams/{{team.key}}" class="list-group-item list-well">
-          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{team.name}}</h3>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container" ng-controller="gameIndexController">
-  <div class="row bottom-buffer-20">
-    <div class="col-sm-6">
-      <h3 style="margin-top: 15px;">Games</h3>
-    </div>
-    <div class="col-sm-6">
-      <span class="pull-right">
-        <a href="#/games/new" class="btn btn-success">New Game</a>
-      </span>
-    </div>
-  </div>
-  <div class="row" ng-show="showNewGameForm">
     <div class="col-sm-12">
       <form name="newGame" novalidate>
         <div class="form-group" ng-class="{ 'has-error': newGame.gameOpponent.$touched && newGame.gameOpponent.$invalid }">
@@ -60,18 +32,35 @@
             <p ng-message="required">Please enter a Date</p>
           </div>
         </div>
+        <div class="form-group" ng-class="{ 'has-error': newGame.gameTeam.$touched && newGame.gameTeam.$invalid }">
+          <select
+            class="form-control"
+            id="game-team"
+            name="gameTeam"
+            ng-model="game.teamKey"
+            placeholder="Team"
+            required >
+            <option value="0" selected>Select Team</option>
+            <option ng-repeat="team in teams" value="{{team.key}}">{{team.name}}</option>
+          </select>
+          <div ng-messages="newGame.gameTeam.$error" ng-show="newGame.gameTeam.$touched">
+            <p ng-message="required">Please select a Team</p>
+          </div>
+        </div>
         <a href="" class="btn btn-success right-spacing" ng-click="createNewGame(game)">Create Game</a>
         <a href="" class="btn btn-danger" ng-click="cancelCreateGame()">Cancel</a>
       </form>
     </div>
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="list-group">
-        <a ng-repeat="game in staticGames" href="#/games/{{game.key}}" class="list-group-item list-well">
-          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h3>
-        </a>
-      </div>
-    </div>
-  </div>
 </div>
+
+
+<script type="text/javascript">
+  // http://amsul.ca/pickadate.js/date/
+  $('#game-date').pickadate({
+    format: 'm/d/yyyy'
+  });
+  // $('#game-date').datetimepicker({
+  //   format: 'M/D/YYYY'
+  // });
+</script>

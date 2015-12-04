@@ -18,6 +18,8 @@ app.factory('NetworkSnifferService', function($http, $q, $cookies, Config) {
       );
       return deferred.promise;
     }
+
+
   };
 
   return NetworkSnifferService;

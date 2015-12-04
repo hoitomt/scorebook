@@ -13,9 +13,13 @@ app.config(function($routeProvider) {
       templateUrl: 'app/pages/home.html',
       controller: 'mainController'
     })
-    .when('/game/:id', {
-      templateUrl: 'app/pages/game.html',
-      controller: 'gameController',
+    .when('/games/new', {
+      templateUrl: 'app/pages/games/new.html',
+      controller: 'gamesController'
+    })
+    .when('/games/:id', {
+      templateUrl: 'app/pages/games/edit.html',
+      controller: 'gamesController',
       routeName: 'game'
     })
     .when('/login', {

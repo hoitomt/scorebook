@@ -42,8 +42,10 @@ app.factory('TeamFactory', function(PlayerFactory, UserFactory) {
   };
 
   TeamFactory.teams = function(number) {
-    number = angular.isUndefined(number) ? 1 : number
     var teamKeys = TeamFactory.localStorageKeys();
+    if(!number && teamKeys){
+      number = teamKeys.length;
+    }
     var teamArray = new Array;
     while(teamArray.length < number && teamKeys.length > 0) {
       var team = TeamFactory.find(teamKeys.pop());

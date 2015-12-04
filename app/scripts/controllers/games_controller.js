@@ -1,11 +1,38 @@
-app.controller('gameController', function($scope, $route, $routeParams, $location, GameFactory, PlayerFactory) {
+app.controller('gamesController', function($scope, $route, $routeParams, $location, GameFactory, PlayerFactory, TeamFactory) {
 
   $scope.showCorrectionPanel = false;
+  // Default the select list to "Select Team"
+  $scope.game = {};
+  $scope.game.teamKey = "0";
+  $scope.teams = TeamFactory.teams();
 
   if($route.current.routeName == 'game' && $routeParams.id) {
     var gameKey = $routeParams.id
     console.log("Game ID: " + gameKey);
     $scope.game = GameFactory.find(gameKey);
+  };
+
+  $scope.createNewGame = function(gameParams) {
+    console.log("Game Parameters: ", gameParams);
+    if(angular.isUndefined(gameParams.opponent) || angular.isUndefined(gameParams.date)) {
+      console.log("Invalid Game Create");
+    } else {
+      var team = TeamFactory.find(gameParams.teamKey);
+      gameParams.players = team.players;
+      var game = new GameFactory(gameParams);
+      game.create();
+
+      $location.path('/games/' + game.key);
+    }
+  };
+
+  $scope.cancelCreateGame = function() {
+    resetOpponent();
+    $location.path('/');
+  };
+
+  function resetOpponent() {
+    $scope.game = {opponent: "", date: ""};
   };
 
   $scope.moveToBench = function(game, player) {
