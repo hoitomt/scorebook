@@ -56,4 +56,23 @@ app.config(function($routeProvider) {
 // Copied from this guy: http://arthur.gonigberg.com/2013/06/29/angularjs-role-based-auth/
 app.run(function ($rootScope, RouteService) {
   RouteService.authenticate();
+
+  if(window.applicationCache.onchecking) {
+    window.applicationCache.onchecking(function(){
+      console.log("Checking the application cache");
+    });
+
+    window.applicationCache.ondownloading(function(){
+      console.log("Downloading the files");
+    });
+
+    window.applicationCache.onprogress(function(){
+      console.log("Making Progress downloading the files");
+    });
+
+    window.applicationCache.oncached(function(){
+      console.log("All of the files have been cached");
+    });
+  }
+
 });

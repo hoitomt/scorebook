@@ -101,7 +101,11 @@ app.factory('TeamFactory', function(PlayerFactory, UserFactory) {
   }
 
   TeamFactory.prototype.createKey = function() {
-    return this.userId + '_' + this.name + '_' + this.occurrence;
+    if(this.userId) {
+      return this.userId + '_' + this.name + '_' + this.occurrence;
+    } else {
+      return this.name + '_' + this.occurrence;
+    }
   };
 
   TeamFactory.prototype.values = function() {
