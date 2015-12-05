@@ -1,7 +1,11 @@
 CACHE MANIFEST
-# rev 0.01
+# rev 0.02
 index.html
 favicon.ico
+/app/images/ball-basketball-64-186818.png
+/app/images/ball-basketball-72-186818.png
+/app/images/ball-basketball-120-186818.png
+/app/images/ball-basketball-152-186818.png
 /app/pages/games/edit.html
 /app/pages/games/new.html
 /app/pages/teams/edit.html
