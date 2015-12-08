@@ -1,0 +1,23 @@
+<ion-view view-title="New Team">
+  <ion-content class="padding" ng-controller="teamsController">
+    <form id="newTeam" class="form-inline">
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input
+            type="text"
+            class="form-control right-spacing"
+            name="teamName"
+            ng-model="team.name"
+            ng-pattern="/^[\sa-zA-Z0-9]*$/"
+            placeholder="Team Name"
+            required />
+          <div ng-messages="newTeam.teamName.$error" ng-show="newTeam.teamName.$touched">
+            <p ng-message="pattern">Name contains an invalid character</p>
+            <p ng-message="required">Please enter a Name</p>
+          </div>
+        </label>
+      </div>
+      <a class="button button-balanced" ng-click="createTeam(team)">Save</a>
+    </form>
+  </ion-content>
+</ion-view>

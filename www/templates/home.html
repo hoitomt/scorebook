@@ -1,0 +1,13 @@
+<ion-view view-title="Home">
+  <ion-content class="padding">
+    <a href="#/tab/games/new" class="button button-balanced">New Game</a>
+    <div class="list list-inset">
+      <div class="item item-divider">Games</div>
+      <div ng-repeat="game in games" class="item">
+        <a href="#/games/{{game.key}}">
+          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h3>
+        </a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
