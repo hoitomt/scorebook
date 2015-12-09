@@ -1,6 +1,6 @@
 var host = 'http://localhost:3000';
 
-var app = angular.module('scorebook', ['ionic', 'ngCookies', 'ngMessages'])
+var app = angular.module('scorebook', ['ionic', 'ngCookies', 'ngMessages', 'ionic-datepicker'])
 
 app.constant('Config', {
   'DB_NAME': 'scorebook',
@@ -47,6 +47,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   // Each tab has its own nav history stack:
   .state('tab.home', {
     url: '/home',
+    authenticate: true,
     views: {
       'tab-home': {
         templateUrl: 'templates/home.html',
@@ -54,8 +55,39 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
+  .state('tab.noTab', {
+    url: '/notab',
+    authenticate: true,
+    views: {
+      'tab-notab': {
+        templateUrl: 'templates/home.html',
+        controller: 'homeController'
+      }
+    }
+  })
+  .state('tab.newGame', {
+    url: '/games/new',
+    authenticate: true,
+    views: {
+      'tab-notab': {
+        templateUrl: 'templates/games/new.html',
+        controller: 'gamesController'
+      }
+    }
+  })
+  .state('tab.gameDetail', {
+    url: '/games/:gameId',
+    authenticate: true,
+    views: {
+      'tab-notab': {
+        templateUrl: 'templates/games/edit.html',
+        controller: 'gamesController'
+      }
+    }
+  })
   .state('tab.teams', {
     url: '/teams/index',
+    authenticate: true,
     views: {
       'tab-teams': {
         templateUrl: 'templates/teams/index.html',
@@ -63,21 +95,23 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  .state('tab.games' ,{
-    url: '/games/index',
+  .state('tab.newTeam', {
+    url: '/teams/new',
+    authenticate: true,
     views: {
-      'tab-home': {
-        templateUrl: 'templates/games/index.html',
-        controller: 'gamesController'
+      'tab-notab': {
+        templateUrl: 'templates/teams/new.html',
+        controller: 'teamsController'
       }
     }
   })
-  .state('tab.newGame', {
-    url: '/games/new',
+  .state('tab.teamDetail', {
+    url: '/teams/:teamId',
+    authenticate: true,
     views: {
-      'tab-home': {
-        templateUrl: 'templates/games/new.html',
-        controller: 'gamesController'
+      'tab-notab': {
+        templateUrl: 'templates/teams/edit.html',
+        controller: 'teamsController'
       }
     }
   })
@@ -85,11 +119,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
   // .state('home', {
   //   url: '/',
   //   templateUrl: 'templates/home.html',
-  //   authenticate: true
-  // })
-  // .state('new-game', {
-  //   url: '/games/new',
-  //   templateUrl: 'templates/games/new.html',
   //   authenticate: true
   // })
   // .state('game-detail', {
@@ -106,16 +135,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
   //   templateUrl: 'templates/home.html',
   //   authenticate: true
   // })
-  // .state('new-team', {
-  //   url: '/teams/new',
-  //   templateUrl: 'templates/teams/new.html',
-  //   authenticate: true
-  // })
+
   // .state('team-detail', {
   //   url: '/teams/:teamId',
   //   templateUrl: 'templates/teams/edit.html',
-  //   authenticate: true
+  //   authenticate: true,
+  //   controller: 'teamsController'
   // })
+
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/home');

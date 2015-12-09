@@ -1,4 +1,4 @@
-app.controller('gamesController', function($scope, $stateParams, $location, GameFactory, TeamFactory) {
+app.controller('gamesController', function($scope, $state, $stateParams, $location, GameFactory, TeamFactory) {
 
   $scope.showCorrectionPanel = false;
   // Default the select list to "Select Team"
@@ -18,17 +18,18 @@ app.controller('gamesController', function($scope, $stateParams, $location, Game
       console.log("Invalid Game Create");
     } else {
       var team = TeamFactory.find(gameParams.teamKey);
-      gameParams.players = team.players;
-      var game = new GameFactory(gameParams);
-      game.create();
-
-      $location.path('/games/' + game.key);
+      if(team) {
+        gameParams.players = team.players;
+        var game = new GameFactory(gameParams);
+        game.create();
+        $state.go('tab.gameDetail', {gameId: game.key});
+      }
     }
   };
 
   $scope.cancelCreateGame = function() {
     resetOpponent();
-    $location.path('/');
+    $state.go('tab.home');
   };
 
   function resetOpponent() {
@@ -83,5 +84,38 @@ app.controller('gamesController', function($scope, $stateParams, $location, Game
   $scope.removeFoul = function(game, player) {
     player.removeFoul(); game.save();
   }
+
+  function datePickerCallback(selectedDate) {
+    if(selectedDate)
+      $scope.game.date = selectedDate.getMonth() + 1 + "/" +
+                         selectedDate.getDate() + "/" +
+                         selectedDate.getFullYear();
+  }
+
+  $scope.game.datePickerObject = {
+    titleLabel: 'Game Date',  //Optional
+    todayLabel: 'Today',  //Optional
+    closeLabel: 'Close',  //Optional
+    setLabel: 'Set',  //Optional
+    setButtonType : 'button-assertive',  //Optional
+    todayButtonType : 'button-assertive',  //Optional
+    closeButtonType : 'button-assertive',  //Optional
+    inputDate: new Date(),  //Optional
+    mondayFirst: false,  //Optional
+    // disabledDates: disabledDates, //Optional
+    // weekDaysList: weekDaysList, //Optional
+    // monthList: monthList, //Optional
+    templateType: 'modal', //Optional
+    showTodayButton: 'true', //Optional
+    modalHeaderColor: 'bar-positive', //Optional
+    modalFooterColor: 'bar-positive', //Optional
+    from: new Date(2012, 8, 2), //Optional
+    to: new Date(2018, 8, 25),  //Optional
+    callback: function (val) {  //Mandatory
+      datePickerCallback(val);
+    },
+    dateFormat: 'MM/dd/yyyy', //Optional
+    closeOnSelect: false, //Optional
+  };
 
 });

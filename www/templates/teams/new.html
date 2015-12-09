@@ -1,6 +1,6 @@
 <ion-view view-title="New Team">
-  <ion-content class="padding" ng-controller="teamsController">
-    <form id="newTeam" class="form-inline">
+  <ion-content class="padding">
+    <form id="newTeam">
       <div class="list list-inset">
         <label class="item item-input">
           <input
@@ -18,6 +18,7 @@
         </label>
       </div>
       <a class="button button-balanced" ng-click="createTeam(team)">Save</a>
+      <a class="button button-assertive" ng-click="cancelCreateTeam()">Cancel</a>
     </form>
   </ion-content>
 </ion-view>

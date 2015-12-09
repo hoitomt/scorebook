@@ -1,6 +1,7 @@
 app.controller('teamsController', function($scope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
   // Use for button display
   $scope.updatePlayerState = false;
+  $scope.teams = TeamFactory.teams();
 
   if($stateParams.teamId) {
     var teamKey = $stateParams.teamId
@@ -15,8 +16,7 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
     } else {
       var team = new TeamFactory(teamParams);
       team.create();
-      $state.go('team-detail', {teamId: team.key})
-      // $location.path('#/teams/' + team.key);
+      $state.go('tab.teamDetail', {teamId: team.key});
     }
   };
 
@@ -47,13 +47,13 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
     $scope.updatePlayerState = true;
   }
 
-  $scope.cancelCreateGame = function() {
-    resetOpponent();
-    $scope.showNewGameForm = false;
+  $scope.cancelCreateTeam = function() {
+    resetTeam();
+    $state.go('tab.teams')
   };
 
-  function resetOpponent() {
-    $scope.game = {opponent: "", date: ""};
+  function resetTeam() {
+    $scope.team = {name: ""};
   };
 
 });

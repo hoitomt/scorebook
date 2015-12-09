@@ -1,7 +1,7 @@
 app.controller('homeController', function($scope, $cookies, $location, GameFactory, TeamFactory) {
 
   $scope.refreshItems = function() {
-    $scope.staticGames = GameFactory.games();
+    $scope.games = GameFactory.games();
     $scope.teams = TeamFactory.teams();
   }
 

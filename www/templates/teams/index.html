@@ -1,14 +1,14 @@
 <ion-view view-title="Teams">
   <ion-content class="padding">
     <div>
-      <a href="#/teams/new" class="button button-balanced">New Team</a>
+      <a ui-sref="tab.newTeam" class="button button-balanced">New Team</a>
     </div>
     <div class="list list-inset">
       <div class="item item-divider">
         Teams
       </div>
       <div ng-repeat="team in teams" class="item">
-        <a href="#/teams/{{team.key}}" class="">
+        <a href="#/tab/teams/{{team.key}}" class="">
           <h3 style="margin-top: 10px; margin-bottom: 10px;">{{team.name}}</h3>
         </a>
       </div>
