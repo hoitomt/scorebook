@@ -48,6 +48,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('tab.home', {
     url: '/home',
     authenticate: true,
+    cache: false,
     views: {
       'tab-home': {
         templateUrl: 'templates/home.html',
@@ -88,6 +89,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('tab.teams', {
     url: '/teams/index',
     authenticate: true,
+    cache: false,
     views: {
       'tab-teams': {
         templateUrl: 'templates/teams/index.html',
@@ -98,6 +100,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('tab.newTeam', {
     url: '/teams/new',
     authenticate: true,
+    cache: false,
     views: {
       'tab-notab': {
         templateUrl: 'templates/teams/new.html',
@@ -108,6 +111,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   .state('tab.teamDetail', {
     url: '/teams/:teamId',
     authenticate: true,
+    cache: false,
     views: {
       'tab-notab': {
         templateUrl: 'templates/teams/edit.html',

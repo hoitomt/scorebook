@@ -9,6 +9,10 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
     $scope.team = TeamFactory.find(teamKey);
   }
 
+  $scope.navigateToTeams = function() {
+    $state.go('tab.teams');
+  }
+
   $scope.createTeam = function(teamParams) {
     console.log("Team: ", teamParams);
     if(angular.isUndefined(teamParams.name)) {
