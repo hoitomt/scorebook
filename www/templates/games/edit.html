@@ -1,14 +1,17 @@
 <ion-view view-title="{{game.opponent}}">
   <ion-content class="padding" ng-controller="gamesController">
     <h3>{{game.opponent}} - {{game.date}}</h3>
+    <h4>
+      <span class="right-spacing">Points: {{game.points}}</span>
+      <span class="right-spacing">Fouls: {{game.fouls}}</span>
+      <span class="right-spacing">Turnovers: {{game.turnovers}}</span>
+    </h4>
     <div class="list list-inset">
       <div ng-repeat="player in game.inGamePlayers" class="item">
         <div class="pull-left">
-          <span class="h3">{{player.name}}</span>
-          <span style="margin-left: 20px;">p: {{player.totalPoints()}} | </span>
-          <span>a: {{player.assists}} | </span>
-          <span>r: {{player.rebounds}} | </span>
-          <span>t: {{player.turnovers}} | </span>
+          <span class="h3">{{player.number}} {{player.name}}</span>
+          <span style="margin-left: 10px;">{{player.scoringLine()}} | </span>
+          <span>t: {{player.turnovers}} |</span>
           <span>f: {{player.fouls}}</span>
         </div>
         <div class="pull-right">
@@ -25,20 +28,34 @@
         <div class="clearfix"></div>
         <div class="top-buffer">
           <div ng-show="showCorrectionPanel">
-            <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 1)">-1</a>
-            <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 2)">-2</a>
-            <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 3)">-3</a>
-            <a class="button button-assertive right-spacing" href="" ng-click="removeAssist(game, player)">-1 Ast</a>
-            <a class="button button-assertive right-spacing" href="" ng-click="removeRebound(game, player)">-1 Reb</a>
+            <div class="shot-attempt-container">
+              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, player, 2)">2pt</a>
+              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, player, 3)">3pt</a>
+              <a class="button button-assertive" href="" ng-click="removeShotAttempt(game, player, 1)">FT</a>
+              <p>Missed Shot Correction</p>
+            </div>
+            <div class="shot-attempt-container">
+              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 2)">2pt</a>
+              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 3)">3pt</a>
+              <a class="button button-assertive" href="" ng-click="removeScore(game, player, 1)">FT</a>
+              <p>Made Basket Correction</p>
+            </div>
             <a class="button button-assertive right-spacing" href="" ng-click="removeTurnover(game, player)">-1 Turnover</a>
             <a class="button button-assertive right-spacing" href="" ng-click="removeFoul(game, player)">-1 Foul</a>
           </div>
           <div ng-show="!showCorrectionPanel">
-            <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, player, 1)">+1</a>
-            <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, player, 2)">+2</a>
-            <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, player, 3)">+3</a>
-            <a class="button button-balanced right-spacing" href="" ng-click="addAssist(game, player)">+1 Ast</a>
-            <a class="button button-balanced right-spacing" href="" ng-click="addRebound(game, player)">+1 Reb</a>
+            <div class="shot-attempt-container">
+              <a class="button button-positive right-spacing" href="" ng-click="addShotAttempt(game, player, 2)">2pt</a>
+              <a class="button button-positive right-spacing" href="" ng-click="addShotAttempt(game, player, 3)">3pt</a>
+              <a class="button button-positive" href="" ng-click="addShotAttempt(game, player, 1)">FT</a>
+              <p>Missed Shot</p>
+            </div>
+            <div class="shot-attempt-container">
+              <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, player, 2)">2pt</a>
+              <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, player, 3)">3pt</a>
+              <a class="button button-balanced" href="" ng-click="addScore(game, player, 1)">FT</a>
+              <p>Made Basket</p>
+            </div>
             <a class="button button-balanced right-spacing" href="" ng-click="addTurnover(game, player)">+1 Turnover</a>
             <a class="button button-balanced right-spacing" href="" ng-click="addFoul(game, player)">+1 Foul</a>
           </div>
@@ -48,12 +65,9 @@
     <div class="list list-inset">
       <div ng-repeat="player in game.benchPlayers" class="item">
         <div class="pull-left">
-          <span class="h4">{{player.name}}</span>
-          <span>p: {{player.totalPoints()}} | </span>
-          <span>a: {{player.assists}} | </span>
-          <span>r: {{player.rebounds}} | </span>
-          <span>t: {{player.turnovers}} | </span>
-          <span>f: {{player.fouls}}</span>
+          <span class="h4">{{player.number}} {{player.name}} (Points: {{player.totalPoints()}} Fouls: {{player.fouls}})</span>
+          <span style="margin-left: 20px;">{{player.scoringLine()}} | </span>
+          <span>turnovers: {{player.turnovers}}</span>
         </div>
         <div class="pull-right">
           <a ng-click="putInGame(game, player)" class="button button-positive" href="">Put in Game</a>

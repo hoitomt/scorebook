@@ -1,28 +1,33 @@
 .right-spacing {
-  margin-right: 10px; }
+  margin-right: 10px;
+}
 
 .left-spacing {
-  margin-left: 10px; }
+  margin-left: 10px;
+}
 
 button.text-left {
   text-align: left; }
 
 .pull-left {
-  float: left; }
+  float: left;
+}
 
 .pull-right {
-  float: right; }
+  float: right;
+}
 
 .top-buffer {
-  margin-top: 10px; }
+  margin-top: 10px;
+}
 
 .shot-attempt-container {
-  background: #f0f0f0;
-  float: left;
-  padding: 10px 10px 0px 10px;
-  margin: -10px 10px auto auto; }
-  .shot-attempt-container p {
-    text-align: center; }
+  background: #f0f0f0; float: left; padding: 10px 10px 0px 10px; margin: -10px 10px auto auto;
+  p {
+    text-align: center;
+  }
+}
+
 
 /*
 .picker table {

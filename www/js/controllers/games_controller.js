@@ -45,7 +45,13 @@ app.controller('gamesController', function($scope, $state, $stateParams, $locati
   }
 
   $scope.addScore = function(game, player, amount) {
-    player.addScore(amount); game.save();
+    player.addScore(amount);
+    game.points += amount;
+    game.save();
+  };
+
+  $scope.addShotAttempt = function(game, player, amount) {
+    player.addShotAttempt(amount); game.save();
   };
 
   $scope.addRebound = function(game, player) {
@@ -57,16 +63,26 @@ app.controller('gamesController', function($scope, $state, $stateParams, $locati
   }
 
   $scope.addTurnover = function(game, player) {
-    player.addTurnover(); game.save();
+    player.addTurnover();
+    game.turnovers += 1;
+    game.save();
   }
 
   $scope.addFoul = function(game, player) {
-    player.addFoul(); game.save();
+    player.addFoul();
+    game.fouls += 1;
+    game.save();
   }
 
   // Corrections
   $scope.removeScore = function(game, player, amount) {
-    player.removeScore(amount); game.save();
+    player.removeScore(amount);
+    game.points = game.points > amount ? game.points - amount : 0;
+    game.save();
+  };
+
+  $scope.removeShotAttempt = function(game, player, amount) {
+    player.removeShotAttempt(amount); game.save();
   };
 
   $scope.removeRebound = function(game, player) {
@@ -78,11 +94,15 @@ app.controller('gamesController', function($scope, $state, $stateParams, $locati
   }
 
   $scope.removeTurnover = function(game, player) {
-    player.removeTurnover(); game.save();
+    player.removeTurnover();
+    game.turnovers  = game.fouls > 0 ? game.fouls - 1 : 0;
+    game.save();
   }
 
   $scope.removeFoul = function(game, player) {
-    player.removeFoul(); game.save();
+    player.removeFoul();
+    game.fouls = game.fouls > 0 ? game.fouls - 1 : 0
+    game.save();
   }
 
   function datePickerCallback(selectedDate) {

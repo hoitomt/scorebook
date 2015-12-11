@@ -7,6 +7,9 @@ app.factory('GameFactory', function(PlayerFactory) {
     this.date = args.date;
     this.opponent = args.opponent;
     this.key = args.key || this.createKey();
+    this.points = args.points || 0;
+    this.turnovers = args.turnovers || 0;
+    this.fouls = args.fouls || 0;
     this.players = new Array;
 
     this.inGamePlayers = new Array;
@@ -59,7 +62,10 @@ app.factory('GameFactory', function(PlayerFactory) {
       occurrence: this.occurrence,
       date: this.date,
       opponent: this.opponent,
-      players: this.players
+      players: this.players,
+      points: this.points,
+      turnovers: this.turnovers,
+      fouls: this.fouls
     };
   };
 
@@ -96,6 +102,17 @@ app.factory('GameFactory', function(PlayerFactory) {
     });
 
     this.save();
+  }
+
+  GameFactory.prototype.stats = function() {
+    var points = "Points: " + this.points;
+    var fouls = "Fouls: " + this.fouls;
+    var turnovers = "Turnovers: " + this.turnovers;
+    return points + ' ' + turnovers + ' ' + fouls;
+  }
+
+  GameFactory.prototype.resetFouls = function() {
+    this.fouls = 0;
   }
 
   GameFactory.find = function(key) {

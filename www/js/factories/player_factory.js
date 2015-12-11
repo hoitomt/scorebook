@@ -54,6 +54,19 @@ app.factory('PlayerFactory', function() {
     } else {
       // Unknown score amount
     }
+    this.addShotAttempt(amount);
+  }
+
+  PlayerFactory.prototype.addShotAttempt = function(amount) {
+    if(amount == 1) {
+      this.onePointAttempts += 1;
+    } else if(amount == 2) {
+      this.twoPointAttempts += 1;
+    } else if(amount == 3) {
+      this.threePointAttempts += 1;
+    } else {
+      // Unknown attempt amount
+    }
   }
 
   PlayerFactory.prototype.addRebound = function() {
@@ -72,6 +85,14 @@ app.factory('PlayerFactory', function() {
     this.fouls += 1;
   }
 
+  PlayerFactory.prototype.scoringLine = function() {
+    var totalPoints = this.totalPoints() + ' points: '
+    var twoPointers = '2: ' + this.twoPointBaskets + '-' + this.twoPointAttempts;
+    var threePointers = '3: ' + this.threePointBaskets + '-' + this.threePointAttempts;
+    var freeThrows = 'ft: ' + this.onePointBaskets + '-' + this.onePointAttempts;
+    return totalPoints + twoPointers + ' | ' + threePointers + ' | ' + freeThrows;
+  }
+
   PlayerFactory.prototype.totalPoints = function() {
     return this.onePointBaskets * 1 + this.twoPointBaskets * 2 + this.threePointBaskets * 3
   }
@@ -85,6 +106,19 @@ app.factory('PlayerFactory', function() {
       this.threePointBaskets = this.threePointBaskets >= 1 ? this.threePointBaskets - 1 : 0;
     } else {
       // Unknown score amount
+    }
+    this.removeShotAttempt(amount);
+  }
+
+  PlayerFactory.prototype.removeShotAttempt = function(amount) {
+    if(amount == 1) {
+      this.onePointAttempts = this.onePointAttempts >= 1 ? this.onePointAttempts - 1 : 0;
+    } else if(amount == 2) {
+      this.twoPointAttempts = this.twoPointAttempts >= 1 ? this.twoPointAttempts - 1 : 0;
+    } else if(amount == 3) {
+      this.threePointAttempts = this.threePointAttempts >= 1 ? this.threePointAttempts - 1 : 0;
+    } else {
+      // Unknown attempt amount
     }
   }
 

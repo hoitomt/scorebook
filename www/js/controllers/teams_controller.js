@@ -36,7 +36,7 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
     }
     var player = new PlayerFactory(playerParams)
     team.addPlayer(player);
-    $scope.player = null;
+    resetNewPlayerForm();
   }
 
   $scope.deletePlayer = function(team, playerParams) {
@@ -59,5 +59,9 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
   function resetTeam() {
     $scope.team = {name: ""};
   };
+
+  function resetNewPlayerForm() {
+    $scope.player = {name: null, number: null};
+  }
 
 });
