@@ -14,9 +14,7 @@ app.factory('GameFactory', function(PlayerFactory) {
 
     this.inGamePlayers = new Array;
     this.benchPlayers = new Array;
-    if(angular.isUndefined(args.players) || args.players.length <= 0) {
-      this.players = createPlayers();
-    } else {
+    if(angular.isDefined(args.players) && args.players.length <= 0) {
       for(player of args.players) {
         this.players.push(new PlayerFactory(player));
       }

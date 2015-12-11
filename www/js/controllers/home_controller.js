@@ -1,8 +1,16 @@
-app.controller('homeController', function($scope, $cookies, $location, GameFactory, TeamFactory) {
+app.controller('homeController', function($scope, $state, $cookies, $location, GameFactory, TeamFactory) {
+
+  if(newUser()) {
+    $state.go('tab.teams');
+  }
 
   $scope.refreshItems = function() {
     $scope.games = GameFactory.games();
     $scope.teams = TeamFactory.teams();
+  }
+
+  function newUser() {
+    return TeamFactory.teams().length <= 0;
   }
 
   $scope.refreshItems();

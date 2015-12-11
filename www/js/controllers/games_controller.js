@@ -1,10 +1,13 @@
-app.controller('gamesController', function($scope, $state, $stateParams, $location, GameFactory, TeamFactory) {
+app.controller('gamesController', function($scope, $state, $stateParams, $ionicHistory, $location, GameFactory, TeamFactory) {
 
   $scope.showCorrectionPanel = false;
+
   // Default the select list to "Select Team"
   $scope.game = {};
   $scope.game.teamKey = "0";
+
   $scope.teams = TeamFactory.teams();
+  $scope.hideBackButton = false;
 
   if($stateParams.gameId) {
     var gameKey = $stateParams.gameId

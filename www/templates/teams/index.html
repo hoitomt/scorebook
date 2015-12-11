@@ -4,14 +4,10 @@
       <a ui-sref="tab.newTeam" class="button button-balanced">New Team</a>
     </div>
     <div class="list list-inset">
-      <div class="item item-divider">
-        Teams
-      </div>
-      <div ng-repeat="team in teams" class="item">
-        <a href="#/tab/teams/{{team.key}}" class="">
-          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{team.name}}</h3>
-        </a>
-      </div>
+      <div class="item item-divider">Teams</div>
+      <a ng-repeat="team in teams" class="item" href="#/tab/teams/{{team.key}}" class="">
+        <h2 style="margin-top: 10px; margin-bottom: 10px;">{{team.name}}</h2>
+      </a>
     </div>
   </ion-content>
 </ion-view>

@@ -1,6 +1,15 @@
 <ion-view view-title="{{game.opponent}}">
   <ion-content class="padding" ng-controller="gamesController">
-    <h3>{{game.opponent}} - {{game.date}}</h3>
+    <div class="pull-left">
+      <h3>{{game.opponent}} - {{game.date}}</h3>
+    </div>
+    <div class="pull-right">
+      <a ng-click="showCorrectionPanel = !showCorrectionPanel">
+        <span class="button button-assertive" ng-if="showCorrectionPanel">Hide Edts</span>
+        <span class="button button-assertive" ng-if="!showCorrectionPanel">Edit Players</span>
+      </a>
+    </div>
+    <div class="clearfix"></div>
     <h4>
       <span class="right-spacing">Points: {{game.points}}</span>
       <span class="right-spacing">Fouls: {{game.fouls}}</span>
@@ -8,41 +17,17 @@
     </h4>
     <div class="list list-inset">
       <div ng-repeat="player in game.inGamePlayers" class="item">
-        <div class="pull-left">
+        <div class="player-stats">
           <span class="h3">{{player.number}} {{player.name}}</span>
-          <span style="margin-left: 10px;">{{player.scoringLine()}} | </span>
+          <span>({{player.totalPoints()}} points) |</span>
+          <span> 2s: {{player.twoPointBaskets}}-{{player.twoPointAttempts}} |</span>
+          <span> 3s: {{player.threePointBaskets}}-{{player.threePointAttempts}} |</span>
+          <span> FTs: {{player.onePointBaskets}}-{{player.onePointAttempts}} |</span>
           <span>t: {{player.turnovers}} |</span>
           <span>f: {{player.fouls}}</span>
         </div>
-        <div class="pull-right">
-          <span>
-            <a ng-click="showCorrectionPanel = !showCorrectionPanel">
-              <span class="button button-balanced" ng-if="showCorrectionPanel">Hide Corrections</span>
-              <span class="button button-assertive" ng-if="!showCorrectionPanel">Correction</span>
-            </a>
-          </span>
-          <span>
-            <a ng-click="moveToBench(game, player)" class="button button-positive right-spacing" href="">Bench</a>
-          </span>
-        </div>
         <div class="clearfix"></div>
         <div class="top-buffer">
-          <div ng-show="showCorrectionPanel">
-            <div class="shot-attempt-container">
-              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, player, 2)">2pt</a>
-              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, player, 3)">3pt</a>
-              <a class="button button-assertive" href="" ng-click="removeShotAttempt(game, player, 1)">FT</a>
-              <p>Missed Shot Correction</p>
-            </div>
-            <div class="shot-attempt-container">
-              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 2)">2pt</a>
-              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 3)">3pt</a>
-              <a class="button button-assertive" href="" ng-click="removeScore(game, player, 1)">FT</a>
-              <p>Made Basket Correction</p>
-            </div>
-            <a class="button button-assertive right-spacing" href="" ng-click="removeTurnover(game, player)">-1 Turnover</a>
-            <a class="button button-assertive right-spacing" href="" ng-click="removeFoul(game, player)">-1 Foul</a>
-          </div>
           <div ng-show="!showCorrectionPanel">
             <div class="shot-attempt-container">
               <a class="button button-positive right-spacing" href="" ng-click="addShotAttempt(game, player, 2)">2pt</a>
@@ -59,18 +44,40 @@
             <a class="button button-balanced right-spacing" href="" ng-click="addTurnover(game, player)">+1 Turnover</a>
             <a class="button button-balanced right-spacing" href="" ng-click="addFoul(game, player)">+1 Foul</a>
           </div>
+          <div ng-show="showCorrectionPanel">
+            <div class="shot-attempt-container">
+              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, player, 2)">2pt</a>
+              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, player, 3)">3pt</a>
+              <a class="button button-assertive" href="" ng-click="removeShotAttempt(game, player, 1)">FT</a>
+              <p>Missed Shot Correction</p>
+            </div>
+            <div class="shot-attempt-container">
+              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 2)">2pt</a>
+              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, player, 3)">3pt</a>
+              <a class="button button-assertive" href="" ng-click="removeScore(game, player, 1)">FT</a>
+              <p>Made Basket Correction</p>
+            </div>
+            <a class="button button-assertive right-spacing" href="" ng-click="removeTurnover(game, player)">-1 Turnover</a>
+            <a class="button button-assertive right-spacing" href="" ng-click="removeFoul(game, player)">-1 Foul</a>
+            <a ng-if="showCorrectionPanel"
+               ng-click="moveToBench(game, player)"
+               class="button button-positive">Bench</a>
+          </div>
         </div>
       </div>
     </div>
     <div class="list list-inset">
       <div ng-repeat="player in game.benchPlayers" class="item">
-        <div class="pull-left">
-          <span class="h4">{{player.number}} {{player.name}} (Points: {{player.totalPoints()}} Fouls: {{player.fouls}})</span>
-          <span style="margin-left: 20px;">{{player.scoringLine()}} | </span>
-          <span>turnovers: {{player.turnovers}}</span>
+        <div class="pull-left player-stats">
+          <span class="h4">{{player.number}} {{player.name}}</span>
+          <span style="margin-left: 10px;">{{player.scoringLine()}} | </span>
+          <span>t: {{player.turnovers}} |</span>
+          <span>f: {{player.fouls}}</span>
         </div>
         <div class="pull-right">
-          <a ng-click="putInGame(game, player)" class="button button-positive" href="">Put in Game</a>
+          <a ng-if="showCorrectionPanel"
+             ng-click="putInGame(game, player)"
+             class="button button-positive">Put in Game</a>
         </div>
       </div>
     </div>

@@ -16,6 +16,9 @@ button.text-left {
 .top-buffer {
   margin-top: 10px; }
 
+.player-stats {
+  margin-bottom: 10px; }
+
 .shot-attempt-container {
   background: #f0f0f0;
   float: left;

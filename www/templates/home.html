@@ -1,13 +1,11 @@
-<ion-view view-title="Home">
+<ion-view view-title="Scorebook">
   <ion-content class="padding">
     <a ui-sref="tab.newGame" class="button button-balanced">New Game</a>
     <div class="list list-inset">
       <div class="item item-divider">Games</div>
-      <div ng-repeat="game in games" class="item">
-        <a ui-sref="tab.gameDetail({gameId: game.key})">
-          <h3 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h3>
-        </a>
-      </div>
+      <a ng-repeat="game in games" class="item" ui-sref="tab.gameDetail({gameId: game.key})">
+        <h2 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h2>
+      </a>
     </div>
   </ion-content>
 </ion-view>
