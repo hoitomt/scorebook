@@ -1,6 +1,6 @@
 <ion-view view-title="New Game">
   <ion-content class="padding">
-    <form name="newGame" novalidate>
+    <form name="newGameForm" novalidate>
       <div class="list list-inset">
         <label class="item item-input">
           <input
@@ -11,15 +11,18 @@
             ng-pattern="/^[\sa-zA-Z0-9]*$/"
             placeholder="Opponent"
             required />
-          <div ng-messages="newGame.gameOpponent.$error" ng-show="newGame.gameOpponent.$touched">
-            <p ng-message="pattern">Opponent contains an invalid character</p>
-            <p ng-message="required">Please enter an Opponent</p>
-          </div>
         </label>
+        <div ng-messages="newGameForm.gameOpponent.$error" ng-show="newGameForm.gameOpponent.$touched || showErrors">
+          <p ng-message="pattern">Opponent contains an invalid character</p>
+          <p ng-message="required">Please enter an Opponent</p>
+        </div>
       </div>
       <ionic-datepicker input-obj="game.datePickerObject">
         <button class="button button-block button-light icon-left ion-calendar text-left">Game Date {{game.date}}</button>
       </ionic-datepicker>
+      <div ng-show="showDatePickerErrors">
+        <p>Please select a date</p>
+      </div>
       <div class="list list-inset">
         <label class="item item-input item-select">
           <div class="input-label">
@@ -31,15 +34,16 @@
             name="gameTeam"
             ng-model="game.teamKey"
             placeholder="Team"
+            ng-pattern="/^[\sa-zA-Z0-9]*$/"
             required >
             <option ng-repeat="team in teams" value="{{team.key}}">{{team.name}}</option>
           </select>
-          <div ng-messages="newGame.gameTeam.$error" ng-show="newGame.gameTeam.$touched">
-            <p ng-message="required">Please select a Team</p>
-          </div>
         </label>
+        <div ng-messages="newGameForm.gameTeam.$error" ng-show="newGameForm.gameTeam.$touched || showErrors">
+          <p ng-message="required">Please select a Team</p>
+        </div>
       </div>
-      <a class="button button-balanced right-spacing" ng-click="createNewGame(game)">Create Game</a>
+      <a ng-click="createGame(newGameForm.$valid, game)" class="button button-balanced right-spacing">Save</a>
       <a class="button button-assertive" ng-click="cancelCreateGame()">Cancel</a>
     </form>
   </ion-content>

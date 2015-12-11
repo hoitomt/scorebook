@@ -1,12 +1,13 @@
 <ion-view view-title="{{game.opponent}}">
-  <ion-content class="padding" ng-controller="gamesController">
+  <ion-content class="padding">
     <div class="pull-left">
       <h3>{{game.opponent}} - {{game.date}}</h3>
     </div>
     <div class="pull-right">
+      <a class="button button-assertive right-spacing" ng-click="clearFouls(game)" ng-if="showCorrectionPanel">Clear Team Fouls</a>
       <a ng-click="showCorrectionPanel = !showCorrectionPanel">
         <span class="button button-assertive" ng-if="showCorrectionPanel">Hide Edts</span>
-        <span class="button button-assertive" ng-if="!showCorrectionPanel">Edit Players</span>
+        <span class="button button-assertive" ng-if="!showCorrectionPanel">Edit</span>
       </a>
     </div>
     <div class="clearfix"></div>
@@ -20,9 +21,9 @@
         <div class="player-stats">
           <span class="h3">{{player.number}} {{player.name}}</span>
           <span>({{player.totalPoints()}} points) |</span>
-          <span> 2s: {{player.twoPointBaskets}}-{{player.twoPointAttempts}} |</span>
-          <span> 3s: {{player.threePointBaskets}}-{{player.threePointAttempts}} |</span>
-          <span> FTs: {{player.onePointBaskets}}-{{player.onePointAttempts}} |</span>
+          <span> 2pt: {{player.twoPointBaskets}}-{{player.twoPointAttempts}} |</span>
+          <span> 3pt: {{player.threePointBaskets}}-{{player.threePointAttempts}} |</span>
+          <span> FT: {{player.onePointBaskets}}-{{player.onePointAttempts}} |</span>
           <span>t: {{player.turnovers}} |</span>
           <span>f: {{player.fouls}}</span>
         </div>
@@ -43,6 +44,7 @@
             </div>
             <a class="button button-balanced right-spacing" href="" ng-click="addTurnover(game, player)">+1 Turnover</a>
             <a class="button button-balanced right-spacing" href="" ng-click="addFoul(game, player)">+1 Foul</a>
+            <a ng-click="moveToBench(game, player)" class="button button-dark">Bench</a>
           </div>
           <div ng-show="showCorrectionPanel">
             <div class="shot-attempt-container">
@@ -59,9 +61,6 @@
             </div>
             <a class="button button-assertive right-spacing" href="" ng-click="removeTurnover(game, player)">-1 Turnover</a>
             <a class="button button-assertive right-spacing" href="" ng-click="removeFoul(game, player)">-1 Foul</a>
-            <a ng-if="showCorrectionPanel"
-               ng-click="moveToBench(game, player)"
-               class="button button-positive">Bench</a>
           </div>
         </div>
       </div>
@@ -70,14 +69,15 @@
       <div ng-repeat="player in game.benchPlayers" class="item">
         <div class="pull-left player-stats">
           <span class="h4">{{player.number}} {{player.name}}</span>
-          <span style="margin-left: 10px;">{{player.scoringLine()}} | </span>
+          <span>({{player.totalPoints()}} points) |</span>
+          <span> 2pt: {{player.twoPointBaskets}}-{{player.twoPointAttempts}} |</span>
+          <span> 3pt: {{player.threePointBaskets}}-{{player.threePointAttempts}} |</span>
+          <span> FT: {{player.onePointBaskets}}-{{player.onePointAttempts}} |</span>
           <span>t: {{player.turnovers}} |</span>
           <span>f: {{player.fouls}}</span>
         </div>
         <div class="pull-right">
-          <a ng-if="showCorrectionPanel"
-             ng-click="putInGame(game, player)"
-             class="button button-positive">Put in Game</a>
+          <a ng-click="putInGame(game, player)" class="button button-dark">Put in Game</a>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
 
   // Default the select list to "Select Team"
   $scope.game = {};
-  $scope.game.teamKey = "0";
+  $scope.game.teamKey = null;
 
   $scope.teams = TeamFactory.teams();
   $scope.hideBackButton = false;
@@ -15,10 +15,15 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
     $scope.game = GameFactory.find(gameKey);
   };
 
-  $scope.createNewGame = function(gameParams) {
+  $scope.createGame = function(valid, gameParams) {
     console.log("Game Parameters: ", gameParams);
-    if(angular.isUndefined(gameParams.opponent) || angular.isUndefined(gameParams.date)) {
+    if(angular.isUndefined($scope.game.date) || $scope.game.date == "") {
+      $scope.showDatePickerErrors = true;
+      valid = false;
+    }
+    if(!valid) {
       console.log("Invalid Game Create");
+      $scope.showErrors = true;
     } else {
       var team = TeamFactory.find(gameParams.teamKey);
       if(team) {
@@ -36,7 +41,7 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
   };
 
   function resetOpponent() {
-    $scope.game = {opponent: "", date: ""};
+    $scope.game = {opponent: "", date: "", teamKey: null};
   };
 
   $scope.moveToBench = function(game, player) {
@@ -108,11 +113,17 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
     game.save();
   }
 
+  $scope.clearFouls = function(game) {
+    game.fouls = 0;
+    game.save();
+  }
+
   function datePickerCallback(selectedDate) {
     if(selectedDate)
       $scope.game.date = selectedDate.getMonth() + 1 + "/" +
                          selectedDate.getDate() + "/" +
                          selectedDate.getFullYear();
+    $scope.showDatePickerErrors = false;
   }
 
   $scope.game.datePickerObject = {
@@ -138,7 +149,7 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
       datePickerCallback(val);
     },
     dateFormat: 'MM/dd/yyyy', //Optional
-    closeOnSelect: false, //Optional
+    closeOnSelect: true, //Optional
   };
 
 });

@@ -89,10 +89,12 @@ app.factory('TeamFactory', function(PlayerFactory, UserFactory) {
 
   TeamFactory.prototype.sortedPlayers = function() {
     this.players.sort(function(a, b) {
-      if(a.number > b.number) {
+      var aNumber = a.number ? parseInt(a.number) : 0;
+      var bNumber = b.number ? parseInt(b.number) : 0;
+      if(aNumber > bNumber) {
         return 1;
       }
-      if(b.number > a.number){
+      if(bNumber > aNumber){
         return -1;
       }
       return 0;

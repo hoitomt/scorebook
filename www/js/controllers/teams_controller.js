@@ -1,7 +1,7 @@
 app.controller('teamsController', function($scope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
   // Use for button display
-  $scope.updatePlayerState = false;
   $scope.teams = TeamFactory.teams();
+  resetNewPlayerForm();
 
   if($stateParams.teamId) {
     var teamKey = $stateParams.teamId
@@ -13,10 +13,11 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
     $state.go('tab.teams');
   }
 
-  $scope.createTeam = function(teamParams) {
-    console.log("Team: ", teamParams);
-    if(angular.isUndefined(teamParams.name)) {
+  $scope.createTeam = function(valid, teamParams) {
+    console.log("Team: ", valid);
+    if(!valid) {
       console.log("Invalid Team Create");
+      $scope.showErrors = true;
     } else {
       var team = new TeamFactory(teamParams);
       team.create();
@@ -61,6 +62,8 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
   };
 
   function resetNewPlayerForm() {
+    console.log("Reset the form");
+    $scope.updatePlayerState = false;
     $scope.player = {name: null, number: null};
   }
 

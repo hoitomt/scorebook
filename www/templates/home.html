@@ -1,11 +1,18 @@
 <ion-view view-title="Scorebook">
   <ion-content class="padding">
-    <a ui-sref="tab.newGame" class="button button-balanced">New Game</a>
-    <div class="list list-inset">
-      <div class="item item-divider">Games</div>
-      <a ng-repeat="game in games" class="item" ui-sref="tab.gameDetail({gameId: game.key})">
-        <h2 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h2>
-      </a>
+    <div ng-show="newUser()">
+      <h3>Welcome to Scorebook!</h3>
+      <h4>Please add a team</h4>
+      <a ui-sref="tab.newTeam" class="button button-balanced">New Team</a>
+    </div>
+    <div ng-show="!newUser()">
+      <a ui-sref="tab.newGame" class="button button-balanced">New Game</a>
+      <div class="list list-inset">
+        <div class="item item-divider">Games</div>
+        <a ng-repeat="game in games" class="item" ui-sref="tab.gameDetail({gameId: game.key})">
+          <h2 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h2>
+        </a>
+      </div>
     </div>
   </ion-content>
 </ion-view>

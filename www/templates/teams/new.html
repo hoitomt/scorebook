@@ -1,6 +1,6 @@
 <ion-view view-title="New Team">
   <ion-content class="padding">
-    <form id="newTeam">
+    <form name="newTeamForm" ng-submit="createTeam(newTeamForm.$valid, team)" novalidate>
       <div class="list list-inset">
         <label class="item item-input">
           <input
@@ -11,13 +11,13 @@
             ng-pattern="/^[\sa-zA-Z0-9]*$/"
             placeholder="Team Name"
             required />
-          <div ng-messages="newTeam.teamName.$error" ng-show="newTeam.teamName.$touched">
-            <p ng-message="pattern">Name contains an invalid character</p>
-            <p ng-message="required">Please enter a Name</p>
-          </div>
         </label>
+        <div ng-messages="newTeamForm.teamName.$error" ng-show="newTeamForm.teamName.$touched || showErrors">
+          <p ng-message="pattern">Name contains an invalid character</p>
+          <p ng-message="required">Please enter a Name</p>
+        </div>
       </div>
-      <a class="button button-balanced" ng-click="createTeam(team)">Save</a>
+      <input class="button button-balanced right-spacing" type="submit" value="Save" />
       <a class="button button-assertive" ng-click="cancelCreateTeam()">Cancel</a>
     </form>
   </ion-content>
