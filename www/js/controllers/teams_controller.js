@@ -20,7 +20,7 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
       $scope.showErrors = true;
     } else {
       var team = new TeamFactory(teamParams);
-      team.create();
+      team.save();
       $state.go('tab.teamDetail', {teamId: team.key});
     }
   };

@@ -46,13 +46,14 @@
     <div class="card">
       <div class="row" ng-repeat="player in team.sortedPlayers()">
         <div class="col col-10"><h4>{{player.number}}</h4></div>
-        <div class="col col-33"><h4>{{player.name}}</h4></div>
+        <div class="col col-33"><span class="h4">{{player.name}}</span></div>
         <div class="col col-10">
           <a ng-click="updatePlayer(team, player)" class="button button-small button-full button-positive">Edit</a>
         </div>
         <div class="col col-10">
           <a ng-click="deletePlayer(team, player)" class="button button-small button-full button-assertive">Remove</a>
         </div>
+        <div class="col col-10"><small>{{player.remoteId}}</small></div>
       </div>
     </div>
   </ion-content>

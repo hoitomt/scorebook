@@ -1,13 +1,15 @@
-var host = 'http://localhost:3000';
+var host = 'http://localhost:3000/api/v1';
+var db = null;
 
-var app = angular.module('scorebook', ['ionic', 'ngCookies', 'ngMessages', 'ionic-datepicker'])
+var app = angular.module('scorebook', ['ionic', 'ngCookies', 'ngMessages', 'ionic-datepicker', 'ngCordova'])
 
 app.constant('Config', {
-  'DB_NAME': 'scorebook',
-  'AUTH_URL': host + '/api/v1/authentication'
+  'url_auth': host + '/authentication',
+  'url_team': host + '/teams',
+  'url_game': host + '/games'
 });
 
-app.run(function($ionicPlatform, $rootScope, $cookies, AuthenticationService) {
+app.run(function($ionicPlatform, $rootScope, $cookies, $cordovaSQLite, $http, AuthenticationService, RootScopeService, DatabaseService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -19,14 +21,28 @@ app.run(function($ionicPlatform, $rootScope, $cookies, AuthenticationService) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    if(ionic.Platform.isIpad) {
+      db = $cordovaSQLite.openDB({ name: "scorebook" });
+    } else {
+      db = openDatabase('scorebook', '1.0', 'Scorebook Database', 10 * 1024 * 1024);
+
+    }
+
+    DatabaseService.runMigrations();
   });
 
   // Set LoggedIn variable - used to control display
-  $rootScope.isLoggedIn = AuthenticationService.isAuthenticated();
+  $rootScope.isLoggedIn = AuthenticationService.isAuthenticated;
+
+  // Check logged in status
+  $rootScope.tryConnection = RootScopeService.tryConnection;
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+    RootScopeService.tryConnection();
     AuthenticationService.authenticate(toState);
   });
+
+  $http.defaults.headers.common.Authorization = 'Token token=' + $cookies.get('apiKey');
 
 });
 
@@ -120,34 +136,17 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
-
-  // .state('home', {
-  //   url: '/',
-  //   templateUrl: 'templates/home.html',
-  //   authenticate: true
-  // })
-  // .state('game-detail', {
-  //   url: '/games/:gameId',
-  //   templateUrl: 'templates/games/edit.html',
-  //   authenticate: true
-  // })
-  // .state('login', {
-  //   url: '/login',
-  //   templateUrl: 'templates/login.html'
-  // })
-  // .state('logout', {
-  //   url: '/logout',
-  //   templateUrl: 'templates/home.html',
-  //   authenticate: true
-  // })
-
-  // .state('team-detail', {
-  //   url: '/teams/:teamId',
-  //   templateUrl: 'templates/teams/edit.html',
-  //   authenticate: true,
-  //   controller: 'teamsController'
-  // })
-
+  .state('tab.sync', {
+    url: '/sync',
+    authenticate: true,
+    cache: false,
+    views: {
+      'tab-sync': {
+        templateUrl: 'templates/sync.html',
+        controller: 'syncController'
+      }
+    }
+  })
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/home');

@@ -1,4 +1,15 @@
-<div class="container">
-  <h2>Sync</h2>
-  <p>coming soon....</p>
-</div>
+<ion-view view-title="Sync">
+  <ion-content class="padding">
+    <h2>Sync</h2>
+    <a class="button button-balanced icon-left ion-ios-refresh"
+       ng-show="isConnected"
+       ng-click="syncData()">Sync</a>
+    <div ng-show="isSyncing">
+      <img src="img/heartbeat.GIF">
+      <p class="">{{syncMessage}}</p>
+    </div>
+    <p>
+      <a class="button button-balanced" ng-click="runDatabase()">Database</a>
+    </p>
+  </ion-content>
+</ion-view>

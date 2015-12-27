@@ -14,6 +14,7 @@ app.factory('PlayerFactory', function() {
     this.assists = args.assists || 0;
     this.fouls = args.fouls || 0;
     this.inGame = args.inGame || false;
+    this.remoteId = args.remoteId || null;
     this.key = args.key || this.createKey();
   };
 
@@ -36,7 +37,33 @@ app.factory('PlayerFactory', function() {
       assists: this.assists,
       fouls: this.fouls,
       inGame: this.inGame,
+      remoteId: this.remoteId,
       key: this.key
+    };
+  };
+
+  PlayerFactory.prototype.syncValues = function() {
+    return {
+      name: this.name,
+      number: this.number,
+      id: this.remoteId
+    };
+  };
+
+  PlayerFactory.prototype.syncBoxScoreValues = function() {
+    return {
+      name: this.name,
+      number: this.number,
+      one_point_attempts: this.onePointAttempts,
+      one_point_baskets: this.onePointBaskets,
+      two_point_attempts: this.twoPointAttempts,
+      two_point_baskets: this.twoPointBaskets,
+      three_point_attempts: this.threePointAttempts,
+      three_point_baskets: this.threePointBaskets,
+      turnovers: this.turnovers,
+      rebounds: this.rebounds,
+      assists: this.assists,
+      fouls: this.fouls,
     };
   };
 

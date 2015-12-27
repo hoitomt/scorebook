@@ -33,7 +33,7 @@ app.factory('UserFactory', function($http, $cookies, $q, Config) {
   UserFactory.prototype.login = function() {
     var deferred = $q.defer();
 
-    $http.post(Config.AUTH_URL, {user: this.loginParameters()})
+    $http.post(Config.url_auth, {user: this.loginParameters()})
       .then(function(response){
         console.log("Success Response: ", response);
         var apiKey = response.data.api_key;
