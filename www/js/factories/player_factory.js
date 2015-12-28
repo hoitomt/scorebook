@@ -1,44 +1,81 @@
-app.factory('PlayerFactory', function() {
+app.factory('PlayerFactory', function($q, DatabaseService) {
 
   var PlayerFactory = function(args) {
+    this.rowid = args.rowid;
     this.name = args.name;
     this.number = args.number;
-    this.onePointAttempts = args.onePointAttempts || 0;
-    this.onePointBaskets = args.onePointBaskets || 0;
-    this.twoPointAttempts = args.twoPointAttempts || 0;
-    this.twoPointBaskets = args.twoPointBaskets || 0;
-    this.threePointAttempts = args.threePointAttempts || 0;
-    this.threePointBaskets = args.threePointBaskets || 0;
-    this.turnovers = args.turnovers || 0;
-    this.rebounds = args.rebounds || 0;
-    this.assists = args.assists || 0;
-    this.fouls = args.fouls || 0;
-    this.inGame = args.inGame || false;
-    this.remoteId = args.remoteId || null;
-    this.key = args.key || this.createKey();
+    this.teamId = args.teamId || args.team_id;
+    this.remoteId = args.remoteId || args.remote_id || 0;
   };
 
-  PlayerFactory.prototype.createKey = function() {
-    return this.number + '_' + this.name;
+  PlayerFactory.players = function(teamId) {
+    console.log("Retrieve Players for: ", teamId);
+    var deferred = $q.defer();
+    var players = [];
+    DatabaseService.selectPlayers(teamId).then(function(res) {
+      for(var i = 0; i < res.rows.length; i++) {
+        player = new PlayerFactory(res.rows[i]);
+        players.push(player);
+      }
+      deferred.resolve(players);
+    }, function(e){
+      console.log(e.message);
+      deferred.reject(e);
+    });
+    return deferred.promise;
+  };
+
+  PlayerFactory.findPlayer = function(playerId) {
+    console.log("Retrieve Player: ", playerId);
+    var deferred = $q.defer();
+    DatabaseService.selectPlayer(teamId).then(function(res) {
+      player = new PlayerFactory(res.rows[0]);
+      deferred.resolve(player);
+    }, function(e){
+      console.log(e.message);
+      deferred.reject(e);
+    });
+    return deferred.promise;
+  }
+
+  PlayerFactory.deletePlayer = function(playerId) {
+    console.log("Delete Player: ", playerId);
+    var deferred = $q.defer();
+    DatabaseService.deletePlayer(playerId).then(function(res) {
+      deferred.resolve();
+    }, function(e){
+      console.log(e.message);
+    });
+    return deferred.promise;
+  }
+
+  PlayerFactory.prototype.save = function() {
+    console.log("Persist to Local Storage");
+    if(this.newRecord()){
+      var _this = this;
+      var deferred = $q.defer();
+
+      DatabaseService.insertPlayer(this.values()).then(function(res){
+        _this.rowid = res.insertId;
+        deferred.resolve(_this);
+      });
+      return deferred.promise;
+    } else {
+      return DatabaseService.updatePlayer(this.values());
+    }
+  };
+
+  PlayerFactory.prototype.newRecord = function() {
+    return angular.isUndefined(this.rowid) || this.rowid == 0;
   };
 
   PlayerFactory.prototype.values = function() {
     return {
+      rowid: this.rowid,
       name: this.name,
       number: this.number,
-      onePointAttempts: this.onePointAttempts,
-      onePointBaskets: this.onePointBaskets,
-      twoPointAttempts: this.twoPointAttempts,
-      twoPointBaskets: this.twoPointBaskets,
-      threePointAttempts: this.threePointAttempts,
-      threePointBaskets: this.threePointBaskets,
-      turnovers: this.turnovers,
-      rebounds: this.rebounds,
-      assists: this.assists,
-      fouls: this.fouls,
-      inGame: this.inGame,
-      remoteId: this.remoteId,
-      key: this.key
+      teamId: this.teamId,
+      remoteId: this.remoteId
     };
   };
 
@@ -46,6 +83,7 @@ app.factory('PlayerFactory', function() {
     return {
       name: this.name,
       number: this.number,
+      teamId: this.teamId,
       id: this.remoteId
     };
   };

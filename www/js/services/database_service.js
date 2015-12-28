@@ -1,4 +1,4 @@
-app.factory('DatabaseService', function($q, $cordovaSQLite) {
+app.factory('DatabaseService', function($q, $cordovaSQLite){
   var DatabaseService = {
     runMigrations: function(){
       console.log("Run the database migrations");
@@ -15,6 +15,7 @@ app.factory('DatabaseService', function($q, $cordovaSQLite) {
       console.log("Execute Query: " + query + " With args: " + args);
       db.transaction(function(tx){
         tx.executeSql(query, args, function(tx, res){
+          console.log("DB Transaction Complete");
           deferred.resolve(res);
         }, function(e){
           console.log("ERROR: " + e.message);
@@ -23,27 +24,55 @@ app.factory('DatabaseService', function($q, $cordovaSQLite) {
       });
       return deferred.promise;
     },
+
+    // Teams
     selectTeams: function(){
-      return this.executeTransaction('SELECT * from teams;', []);
+      var queryResponse = this.executeTransaction('SELECT rowid, * from teams;', []);
+      return queryResponse;
     },
-    selectTeam: function(team){
-      return this.executeTransaction('SELECT * FROM teams WHERE id = ?', [team.id]);
+    selectTeam: function(rowid){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM teams WHERE rowid = ?', [rowid]);
+      return queryResponse;
     },
     insertTeam: function(team){
-      // db.transaction(function (tx) {
-      //   tx.executeSql('INSERT INTO teams (name, user_id, remote_id) VALUES ("synergies x", 1, 1);');
-      // });
-      // var query = 'INSERT INTO teams (name, user_id, remote_id) VALUES ("synergies x", 1, 1);';
-      // return this.executeTransaction(query);
       var query = "INSERT INTO teams (name, user_id, remote_id) VALUES (?,?,?)"
       var queryArgs = [team.name, team.userId, team.remoteId];
-      var response = this.executeTransaction(query, queryArgs);
-      return response
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
     },
     updateTeam: function(team){
       var query = 'UPDATE teams SET name = ?, user_id = ?, remote_id = ? WHERE id = ?';
-      var queryArgs = [team.name, team.userId, team.remoteId, team.localId];
-      return this.executeTransaction(query, queryArgs);
+      var queryArgs = [team.name, team.userId, team.remoteId, team.rowid];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+
+    // Players
+    selectPlayers: function(team_id){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM players WHERE team_id = ?;', [team_id]);
+      return queryResponse;
+    },
+    selectPlayer: function(rowid){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM players WHERE rowid = ?', [rowid]);
+      return queryResponse;
+    },
+    insertPlayer: function(player){
+      var query = "INSERT INTO players (name, number, team_id, remote_id) VALUES (?,?,?,?)"
+      var queryArgs = [player.name, player.number, player.teamId, player.remoteId];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    updatePlayer: function(player){
+      var query = 'UPDATE players SET name = ?, number = ?, team_id = ?, remote_id = ? WHERE rowid = ?';
+      var queryArgs = [player.name, player.number, player.teamId, player.remoteId, player.rowid];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    deletePlayer: function(rowid){
+      var query = 'DELETE FROM players WHERE rowid = ?'
+      var queryArgs = [rowid];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
     }
   };
 

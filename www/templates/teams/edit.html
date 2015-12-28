@@ -1,7 +1,7 @@
 <ion-view view-title="{{team.name}}">
   <ion-content class="padding">
-    <h1>Add Players to {{team.name}}</h1>
-    <form id="teamRoster">
+    <form name="$parent.teamRoster" ng-submit="createPlayer(teamRoster.$valid, team, player)" novalidate>
+      <h1>Add Players to {{team.name}} ({{team.rowid}})</h1>
       <div class="list list-inset">
         <div class="row">
           <div class="col col-20">
@@ -15,11 +15,11 @@
                 ng-pattern="/^[0-9]*$/"
                 placeholder="Number"
                 required />
-              <div ng-messages="teamRoster.playerNumber.$error" ng-show="teamRoster.playerNumber.$touched">
-                <p ng-message="pattern">Number contains an invalid character</p>
-                <p ng-message="required">Please enter a Number</p>
-              </div>
             </label>
+            <div ng-messages="teamRoster.playerNumber.$error" ng-show="teamRoster.playerNumber.$touched || showErrors">
+              <p ng-message="pattern">Number contains an invalid character</p>
+              <p ng-message="required">Please enter a Number</p>
+            </div>
           </div>
           <div class="col col-33">
             <label class="item item-input">
@@ -31,27 +31,29 @@
                 ng-pattern="/^[\sa-zA-Z0-9]*$/"
                 placeholder="Name"
                 required />
-              <div ng-messages="teamRoster.playerName.$error" ng-show="teamRoster.playerName.$touched">
-                <p ng-message="pattern">Name contains an invalid character</p>
-                <p ng-message="required">Please enter a Name</p>
-              </div>
             </label>
+            <div ng-messages="teamRoster.playerName.$error" ng-show="teamRoster.playerName.$touched || showErrors">
+              <p ng-message="pattern">Name contains an invalid character</p>
+              <p ng-message="required">Please enter a Name</p>
+            </div>
           </div>
           <div class="col col-10">
-            <a class="button button-balanced" ng-click="createPlayer(team, player)">{{updatePlayerState ? "Update" : "Add"}}</a>
+            <input class="button button-balanced right-spacing"
+                   type="submit"
+                   value="{{updatePlayerState ? 'Update' : 'Add'}}" />
           </div>
         </div>
       </div>
     </form>
     <div class="card">
-      <div class="row" ng-repeat="player in team.sortedPlayers()">
+      <div class="row" ng-repeat="player in players">
         <div class="col col-10"><h4>{{player.number}}</h4></div>
-        <div class="col col-33"><span class="h4">{{player.name}}</span></div>
+        <div class="col col-33"><h4>{{player.name}}</h4></div>
         <div class="col col-10">
           <a ng-click="updatePlayer(team, player)" class="button button-small button-full button-positive">Edit</a>
         </div>
         <div class="col col-10">
-          <a ng-click="deletePlayer(team, player)" class="button button-small button-full button-assertive">Remove</a>
+          <a ng-click="deletePlayer(player)" class="button button-small button-full button-assertive">Remove</a>
         </div>
         <div class="col col-10"><small>{{player.remoteId}}</small></div>
       </div>

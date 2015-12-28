@@ -38,8 +38,9 @@ app.run(function($ionicPlatform, $rootScope, $cookies, $cordovaSQLite, $http, Au
   $rootScope.tryConnection = RootScopeService.tryConnection;
 
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    RootScopeService.tryConnection();
-    AuthenticationService.authenticate(toState);
+    RootScopeService.tryConnection().then(function(isConnected){
+      AuthenticationService.authenticate(toState, $rootScope.isConnected);
+    });
   });
 
   $http.defaults.headers.common.Authorization = 'Token token=' + $cookies.get('apiKey');
@@ -93,7 +94,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }
   })
   .state('tab.gameDetail', {
-    url: '/games/:gameId',
+    url: '/games/:gameId/edit',
     authenticate: true,
     cache: false,
     views: {
@@ -104,7 +105,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }
   })
   .state('tab.teams', {
-    url: '/teams/index',
+    url: '/teams',
     authenticate: true,
     cache: false,
     views: {
@@ -126,8 +127,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }
   })
   .state('tab.teamDetail', {
-    url: '/teams/:teamId',
+    url: '/teams/:teamId/edit',
     authenticate: true,
+    params: {'team': null},
     cache: false,
     views: {
       'tab-notab': {
