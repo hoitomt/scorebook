@@ -9,7 +9,7 @@
       <a ui-sref="tab.newGame" class="button button-balanced">New Game</a>
       <div class="list list-inset">
         <div class="item item-divider">Games</div>
-        <a ng-repeat="game in games" class="item" ui-sref="tab.gameDetail({gameId: game.key})">
+        <a ng-repeat="game in games" class="item" ui-sref="tab.gameBoxScore({gameId: game.rowid})">
           <h2 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h2>
         </a>
       </div>

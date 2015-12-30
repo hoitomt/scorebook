@@ -1,15 +1,13 @@
-app.factory('GameFactory', function(PlayerFactory) {
-  var localStorageIndexKey = 'games_keys';
-
+app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, DatabaseService) {
   var GameFactory = function(args) {
-    // Use this to track multiple games with the same opponent on the same date
-    this.occurrence = args.occurrence || 1;
+    this.rowid = args.rowid || null;
     this.date = args.date;
     this.opponent = args.opponent;
-    this.key = args.key || this.createKey();
     this.points = args.points || 0;
     this.turnovers = args.turnovers || 0;
     this.fouls = args.fouls || 0;
+    this.teamId = args.teamId || args.team_id || null;
+    this.remoteId = args.remoteId || args.remote_id || null;
     this.players = new Array;
 
     this.inGamePlayers = new Array;
@@ -29,17 +27,89 @@ app.factory('GameFactory', function(PlayerFactory) {
     }
   };
 
-  GameFactory.prototype.create = function() {
-    console.log("Create new game");
-    // Write the key to the localStorage index
-    this.addLocalStorageKey(this.key);
-    this.save();
+  GameFactory.games = function(number) {
+    console.log("Retrieve all games");
+    var deferred = $q.defer();
+
+    DatabaseService.selectGames().then(function(res) {
+      var gameArray = new Array;
+      if(res.rows.length == 0) return;
+      var gamesParams = res.rows;
+      for(var i = 0; i < gamesParams.length; i++) {
+        gameArray.push(new GameFactory(gamesParams[i]));
+      }
+      deferred.resolve(gameArray);
+    }, function(e) {
+      deferred.reject(e);
+    });
+
+    return deferred.promise;
+  };
+
+  GameFactory.find = function(gameId) {
+    console.log("Retrieve game ", gameId);
+    var deferred = $q.defer();
+
+    DatabaseService.selectGame(gameId).then(function(res) {
+      if(res.rows.length == 0) return;
+      var game = new GameFactory(res.rows[0]);
+      deferred.resolve(game);
+    }, function(e) {
+      deferred.reject(e);
+    });
+
+    return deferred.promise;
   };
 
   GameFactory.prototype.save = function() {
-    console.log("Persist to Local Storage: ", this.key);
-    localStorage.setItem(this.key, this.serializedValues());
+    console.log("Persist to WebSQL");
+    if(this.newRecord){
+      var _this = this;
+      DatabaseService.insertGame(this.values()).then(function(res) {
+        _this.rowid = res.insertId;
+      });
+    } else {
+      DatabaseService.updateGame(this.values());
+    }
   };
+
+  GameFactory.prototype.newRecord = function() {
+    return this.rowid != 0;
+  };
+
+  GameFactory.prototype.team = function() {
+    var deferred = $q.defer();
+    TeamFactory.find(self.teamId).then(function(team){
+      deferred.resolve(team);
+    });
+    return deferred.promise;
+  }
+
+  GameFactory.prototype.createBoxScores = function() {
+    var deferred = $q.defer();
+    var insertPromises = new Array;
+    var _this = this;
+    PlayerFactory.players(this.teamId).then(function(players){
+      for(player of players) {
+        var boxScoreParams = {
+          playerId: player.rowid,
+          gameId: _this.rowid,
+          playerName: player.name,
+          playerNumber: player.number
+        };
+        var boxScore = new BoxScoreFactory(boxScoreParams);
+        insertPromises.push(boxScore.save());
+      }
+      Promise.all(insertPromises).then(function(){
+        console.log("All Inserts complete")
+        deferred.resolve();
+      }, function(e){
+        console.log("ERROR: Box Score insert error: ", e)
+        deferred.reject(e);
+      });
+    });
+    return deferred.promise;
+  }
 
   // Returns yyyymmdd for mm/dd/yyyy
   GameFactory.prototype.dateStamp = function() {
@@ -51,43 +121,21 @@ app.factory('GameFactory', function(PlayerFactory) {
     }
   };
 
-  GameFactory.prototype.createKey = function() {
-    return this.dateStamp() + '_' + this.opponent + '_' + this.occurrence;
-  };
-
   GameFactory.prototype.values = function() {
     return {
-      occurrence: this.occurrence,
+      teamId: this.teamId,
       date: this.date,
       opponent: this.opponent,
       players: this.players,
       points: this.points,
       turnovers: this.turnovers,
-      fouls: this.fouls
+      fouls: this.fouls,
+      remoteId: this.remoteId
     };
   };
 
   GameFactory.prototype.serializedValues = function() {
     return angular.toJson(this.values());
-  };
-
-  GameFactory.prototype.addLocalStorageKey = function(key) {
-    var occurrence = 1;
-
-    // Check for key
-    while(localStorage[key] != null) {
-      // increment the occurrence in the key
-      var keyArray = key.split('_');
-      occurrence = parseInt(keyArray.pop()) + 1;
-      keyArray.push(occurrence);
-      key = keyArray.join('_');
-    }
-    this.occurrence = occurrence;
-    this.key = key;
-
-    var existingKeys = GameFactory.localStorageKeys();
-    existingKeys.push(key);
-    localStorage.setItem(localStorageIndexKey, angular.toJson(existingKeys));
   };
 
   GameFactory.prototype.updatePlayerStatus = function() {
@@ -112,57 +160,6 @@ app.factory('GameFactory', function(PlayerFactory) {
   GameFactory.prototype.resetFouls = function() {
     this.fouls = 0;
   }
-
-  GameFactory.find = function(key) {
-    var rawGame = localStorage.getItem(key);
-    if(rawGame) {
-      var game = angular.fromJson(rawGame);
-      game.key = key;
-      return new GameFactory(game);
-    } else {
-      return null;
-    }
-  };
-
-  // Every game key is stored in a separate key.
-  // By "getting" this key we can retrieve only the game keys from localStorage
-  // This is necessary for pulling lists of games
-  GameFactory.localStorageKeys = function() {
-    var keys = localStorage.getItem(localStorageIndexKey);
-    if(keys) {
-      return angular.fromJson(keys);
-    } else {
-      var a = new Array;
-      return a;
-    }
-  };
-
-  GameFactory.games = function(number) {
-    var gameKeys = GameFactory.localStorageKeys();
-    if(!number && gameKeys){
-      number = gameKeys.length;
-    }
-    var gameArray = new Array;
-    while(gameArray.length < number && gameKeys.length > 0) {
-      var game = GameFactory.find(gameKeys.pop());
-      gameArray.push(game);
-    }
-    return gameArray
-  };
-
-  function createPlayers() {
-    var players = [
-      new PlayerFactory({name: 'Anna Hoitomt', number: '11', inGame: true}),
-      new PlayerFactory({name: 'Adrienne Morning', number: '4', inGame: true}),
-      new PlayerFactory({name: 'Emma Vinopal', number: '1', inGame: true}),
-      new PlayerFactory({name: 'Caitlyn Klink', number: '32', inGame: true}),
-      new PlayerFactory({name: 'Katie Andrews', number: 'x', inGame: true}),
-      new PlayerFactory({name: 'Jessica Sabbagh', number: '23', inGame: false}),
-      new PlayerFactory({name: 'Ariana Smith', number: '25', inGame: false}),
-      new PlayerFactory({name: 'Anna Allen', number: 'y', inGame: false}),
-    ]
-    return players;
-  };
 
   return GameFactory;
 });

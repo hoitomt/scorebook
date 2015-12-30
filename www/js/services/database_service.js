@@ -48,12 +48,12 @@ app.factory('DatabaseService', function($q, $cordovaSQLite){
     },
 
     // Players
-    selectPlayers: function(team_id){
-      var queryResponse = this.executeTransaction('SELECT rowid, * FROM players WHERE team_id = ?;', [team_id]);
+    selectPlayers: function(teamId){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM players WHERE team_id = ?;', [teamId]);
       return queryResponse;
     },
-    selectPlayer: function(rowid){
-      var queryResponse = this.executeTransaction('SELECT rowid, * FROM players WHERE rowid = ?', [rowid]);
+    selectPlayer: function(gameId){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM players WHERE rowid = ?', [gameId]);
       return queryResponse;
     },
     insertPlayer: function(player){
@@ -70,6 +70,91 @@ app.factory('DatabaseService', function($q, $cordovaSQLite){
     },
     deletePlayer: function(rowid){
       var query = 'DELETE FROM players WHERE rowid = ?'
+      var queryArgs = [rowid];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+
+    // Games
+    selectGames: function(gameId){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM games;');
+      return queryResponse;
+    },
+    selectGame: function(gameId){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM games WHERE rowid = ?', [gameId]);
+      return queryResponse;
+    },
+    insertGame: function(game){
+      var query = "INSERT INTO games (opponent, date, team_id, remote_id) VALUES (?,?,?,?)"
+      var queryArgs = [game.opponent, game.date, game.teamId, game.remoteId];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    updateGame: function(game){
+      var query = 'UPDATE games SET opponent = ?, date = ?, team_id = ?, remote_id = ? WHERE rowid = ?';
+      var queryArgs = [game.opponent, game.date, game.teamId, game.remoteId, game.rowid];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    deleteGame: function(rowid){
+      var query = 'DELETE FROM games WHERE rowid = ?'
+      var queryArgs = [rowid];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+
+    // Box Scores
+    selectBoxScores: function(gameId){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM box_scores WHERE game_id = ?', [gameId]);
+      return queryResponse;
+    },
+    selectBoxScore: function(boxScoreId){
+      var queryResponse = this.executeTransaction('SELECT rowid, * FROM box_scores WHERE rowid = ?', [boxScoreId]);
+      return queryResponse;
+    },
+    insertBoxScore: function(boxScore){
+      var query = "INSERT INTO box_scores (player_id, game_id, one_point_attempt, one_point_make, two_point_attempt, two_point_make, three_point_attempt, three_point_make, turnovers, assists, fouls, rebounds, remote_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      var queryArgs = [
+        boxScore.playerId,
+        boxScore.gameId,
+        boxScore.onePointAttempts,
+        boxScore.onePointBaskets,
+        boxScore.twoPointAttempts,
+        boxScore.twoPointBaskets,
+        boxScore.threePointAttempts,
+        boxScore.threePointBaskets,
+        boxScore.turnovers,
+        boxScore.assists,
+        boxScore.fouls,
+        boxScore.rebounds,
+        boxScore.remoteId
+      ];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    updateBoxScore: function(boxScore){
+      var query = 'UPDATE box_scores SET player_id = ?, game_id = ?, one_point_attempt = ?, one_point_make = ?, two_point_attempt = ?, two_point_make = ?, three_point_attempt = ?, three_point_make = ?, turnovers = ?, assists = ?, fouls = ?, rebounds = ?, remote_id = ? WHERE rowid = ?';
+      var queryArgs = [
+        boxScore.playerId,
+        boxScore.gameId,
+        boxScore.onePointAttempts,
+        boxScore.onePointBaskets,
+        boxScore.twoPointAttempts,
+        boxScore.twoPointBaskets,
+        boxScore.threePointAttempts,
+        boxScore.threePointBaskets,
+        boxScore.turnovers,
+        boxScore.assists,
+        boxScore.fouls,
+        boxScore.rebounds,
+        boxScore.remoteId,
+        boxScore.rowid
+      ];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    deleteBoxScore: function(rowid){
+      var query = 'DELETE FROM box_scores WHERE rowid = ?'
       var queryArgs = [rowid];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;

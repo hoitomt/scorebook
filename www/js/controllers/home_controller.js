@@ -7,9 +7,11 @@ app.controller('homeController', function($scope, $state, $cookies, $location, G
       $scope.teams = teams;
       $scope.isNewUser = teams.length <= 0;
     });
+    GameFactory.games().then(function(games){
+      $scope.games = games;
+    })
   }
 
-  $scope.games = GameFactory.games();
   refreshItems();
 
   // $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {

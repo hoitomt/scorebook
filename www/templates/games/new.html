@@ -1,6 +1,6 @@
 <ion-view view-title="New Game">
   <ion-content class="padding">
-    <form name="newGameForm" novalidate>
+    <form name="newGameForm" ng-submit="createGame(newGameForm.$valid, game)" novalidate>
       <div class="list list-inset">
         <label class="item item-input">
           <input
@@ -32,18 +32,18 @@
             class="form-control"
             id="game-team"
             name="gameTeam"
-            ng-model="game.teamKey"
+            ng-model="game.teamId"
             placeholder="Team"
             ng-pattern="/^[\sa-zA-Z0-9]*$/"
             required >
-            <option ng-repeat="team in teams" value="{{team.key}}">{{team.name}}</option>
+            <option ng-repeat="team in teams" value="{{team.rowid}}">{{team.name}}</option>
           </select>
         </label>
         <div ng-messages="newGameForm.gameTeam.$error" ng-show="newGameForm.gameTeam.$touched || showErrors">
           <p ng-message="required">Please select a Team</p>
         </div>
       </div>
-      <a ng-click="createGame(newGameForm.$valid, game)" class="button button-balanced right-spacing">Save</a>
+      <input class="button button-balanced right-spacing" type="submit" value="Save" />
       <a class="button button-assertive" ng-click="cancelCreateGame()">Cancel</a>
     </form>
   </ion-content>

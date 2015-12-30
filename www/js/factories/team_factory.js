@@ -2,7 +2,7 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
   var localStorageIndexKey = 'teams_keys';
 
   var TeamFactory = function(args) {
-    this.rowid = args.rowid || 0;
+    this.rowid = args.rowid || null;
     this.name = args.name;
     this.userId = args.userId || UserFactory.userId() || 0;
     this.remoteId = args.remoteId || 0;
@@ -44,7 +44,7 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
   };
 
   TeamFactory.prototype.save = function() {
-    console.log("Persist to Local Storage");
+    console.log("Persist to WebSQL");
     if(this.newRecord){
       var _this = this;
       DatabaseService.insertTeam(this.values()).then(function(res) {

@@ -1,0 +1,85 @@
+<ion-view view-title="{{game.opponent}}">
+  <ion-content class="padding">
+    <div class="pull-left">
+      <h3>{{game.opponent}} - {{game.date}}</h3>
+    </div>
+    <div class="pull-right">
+      <a class="button button-assertive right-spacing" ng-click="clearFouls(game)" ng-if="showCorrectionPanel">Clear Team Fouls</a>
+      <a ng-click="showCorrectionPanel = !showCorrectionPanel">
+        <span class="button button-assertive" ng-if="showCorrectionPanel">Hide Edts</span>
+        <span class="button button-assertive" ng-if="!showCorrectionPanel">Edit</span>
+      </a>
+    </div>
+    <div class="clearfix"></div>
+    <h4>
+      <span class="right-spacing">Points: {{game.points}}</span>
+      <span class="right-spacing">Fouls: {{game.fouls}}</span>
+      <span class="right-spacing">Turnovers: {{game.turnovers}}</span>
+    </h4>
+    <div class="list list-inset">
+      <div ng-repeat="boxScore in inGamePlayerBoxScores" class="item">
+        <div class="boxScore-stats">
+          <span class="h3">{{boxScore.playerNumber}} {{boxScore.playerName}}</span>
+          <span>({{boxScore.totalPoints()}} points) |</span>
+          <span> 2pt: {{boxScore.twoPointBaskets}}-{{boxScore.twoPointAttempts}} |</span>
+          <span> 3pt: {{boxScore.threePointBaskets}}-{{boxScore.threePointAttempts}} |</span>
+          <span> FT: {{boxScore.onePointBaskets}}-{{boxScore.onePointAttempts}} |</span>
+          <span>t: {{boxScore.turnovers}} |</span>
+          <span>f: {{boxScore.fouls}}</span>
+        </div>
+        <div class="clearfix"></div>
+        <div class="top-buffer">
+          <div ng-show="!showCorrectionPanel">
+            <div class="shot-attempt-container">
+              <a class="button button-positive right-spacing" href="" ng-click="addShotAttempt(game, boxScore, 2)">2pt</a>
+              <a class="button button-positive right-spacing" href="" ng-click="addShotAttempt(game, boxScore, 3)">3pt</a>
+              <a class="button button-positive" href="" ng-click="addShotAttempt(game, boxScore, 1)">FT</a>
+              <p>Missed Shot</p>
+            </div>
+            <div class="shot-attempt-container">
+              <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, boxScore, 2)">2pt</a>
+              <a class="button button-balanced right-spacing" href="" ng-click="addScore(game, boxScore, 3)">3pt</a>
+              <a class="button button-balanced" href="" ng-click="addScore(game, boxScore, 1)">FT</a>
+              <p>Made Basket</p>
+            </div>
+            <a class="button button-balanced right-spacing" href="" ng-click="addTurnover(game, boxScore)">+1 Turnover</a>
+            <a class="button button-balanced right-spacing" href="" ng-click="addFoul(game, boxScore)">+1 Foul</a>
+            <a ng-click="moveToBench(game, boxScore)" class="button button-dark">Bench</a>
+          </div>
+          <div ng-show="showCorrectionPanel">
+            <div class="shot-attempt-container">
+              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, boxScore, 2)">2pt</a>
+              <a class="button button-assertive right-spacing" href="" ng-click="removeShotAttempt(game, boxScore, 3)">3pt</a>
+              <a class="button button-assertive" href="" ng-click="removeShotAttempt(game, boxScore, 1)">FT</a>
+              <p>Missed Shot Correction</p>
+            </div>
+            <div class="shot-attempt-container">
+              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, boxScore, 2)">2pt</a>
+              <a class="button button-assertive right-spacing" href="" ng-click="removeScore(game, boxScore, 3)">3pt</a>
+              <a class="button button-assertive" href="" ng-click="removeScore(game, boxScore, 1)">FT</a>
+              <p>Made Basket Correction</p>
+            </div>
+            <a class="button button-assertive right-spacing" href="" ng-click="removeTurnover(game, boxScore)">-1 Turnover</a>
+            <a class="button button-assertive right-spacing" href="" ng-click="removeFoul(game, boxScore)">-1 Foul</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list list-inset">
+      <div ng-repeat="boxScore in benchPlayerBoxScores" class="item">
+        <div class="pull-left boxScore-stats">
+          <span class="h4">{{boxScore.playerNumber}} {{boxScore.playerName}}</span>
+          <span>({{boxScore.totalPoints()}} points) |</span>
+          <span> 2pt: {{boxScore.twoPointBaskets}}-{{boxScore.twoPointAttempts}} |</span>
+          <span> 3pt: {{boxScore.threePointBaskets}}-{{boxScore.threePointAttempts}} |</span>
+          <span> FT: {{boxScore.onePointBaskets}}-{{boxScore.onePointAttempts}} |</span>
+          <span>t: {{boxScore.turnovers}} |</span>
+          <span>f: {{boxScore.fouls}}</span>
+        </div>
+        <div class="pull-right">
+          <a ng-click="putInGame(game, boxScore)" class="button button-dark">Put in Game</a>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

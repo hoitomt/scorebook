@@ -93,14 +93,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  .state('tab.gameDetail', {
-    url: '/games/:gameId/edit',
+  .state('tab.gameBoxScore', {
+    url: '/games/:gameId/box_score',
     authenticate: true,
     cache: false,
     views: {
       'tab-notab': {
-        templateUrl: 'templates/games/edit.html',
-        controller: 'gamesController'
+        templateUrl: 'templates/games/box_score.html',
+        controller: 'boxScoresController'
       }
     }
   })
