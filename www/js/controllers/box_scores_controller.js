@@ -28,26 +28,26 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
 
       $scope.boxScores = boxScoresWithPlayers;
       refreshPlayerStatus();
+      $scope.$apply()
     })
   });
 
   function refreshPlayerStatus() {
     $scope.inGamePlayerBoxScores = $scope.boxScores.filter(function(boxScore){
-      return boxScore.inGame;
+      return boxScore.getInGame();
     });
 
     $scope.benchPlayerBoxScores = $scope.boxScores.filter(function(boxScore){
-      return !boxScore.inGame;
+      return !boxScore.getInGame();
     });
-    $scope.$apply()
   }
 
   $scope.moveToBench = function(game, boxScore) {
-    boxScore.inGame = false; refreshPlayerStatus();
+    boxScore.inGame = false; boxScore.save(); refreshPlayerStatus();
   };
 
   $scope.putInGame = function(game, boxScore) {
-    boxScore.inGame = true; refreshPlayerStatus();
+    boxScore.inGame = true; boxScore.save(); refreshPlayerStatus();
   }
 
   $scope.addScore = function(game, boxScore, amount) {

@@ -7,7 +7,7 @@ app.factory('DatabaseService', function($q, $cordovaSQLite){
         tx.executeSql('CREATE TABLE IF NOT EXISTS teams (name TEXT, user_id INT, remote_id INT)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS games (opponent TEXT, date TEXT, team_id INT, remote_id INT)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS players (name TEXT, number INT, team_id INT, remote_id INT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS box_scores (player_id INT, game_id INT, one_point_attempt INT, one_point_make INT, two_point_attempt INT, two_point_make INT, three_point_attempt INT, three_point_make INT, turnovers INT, assists INT, fouls INT, rebounds INT, remote_id INT)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS box_scores (player_id INT, game_id INT, one_point_attempts INT, one_point_makes INT, two_point_attempts INT, two_point_makes INT, three_point_attempts INT, three_point_makes INT, turnovers INT, assists INT, fouls INT, rebounds INT, remote_id INT, in_game INT)');
       });
     },
     executeTransaction: function(query, args){
@@ -113,41 +113,43 @@ app.factory('DatabaseService', function($q, $cordovaSQLite){
       return queryResponse;
     },
     insertBoxScore: function(boxScore){
-      var query = "INSERT INTO box_scores (player_id, game_id, one_point_attempt, one_point_make, two_point_attempt, two_point_make, three_point_attempt, three_point_make, turnovers, assists, fouls, rebounds, remote_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+      var query = "INSERT INTO box_scores (player_id, game_id, one_point_attempts, one_point_makes, two_point_attempts, two_point_makes, three_point_attempts, three_point_makes, turnovers, assists, fouls, rebounds, remote_id, in_game) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
       var queryArgs = [
         boxScore.playerId,
         boxScore.gameId,
         boxScore.onePointAttempts,
-        boxScore.onePointBaskets,
+        boxScore.onePointMakes,
         boxScore.twoPointAttempts,
-        boxScore.twoPointBaskets,
+        boxScore.twoPointMakes,
         boxScore.threePointAttempts,
-        boxScore.threePointBaskets,
-        boxScore.turnovers,
-        boxScore.assists,
-        boxScore.fouls,
-        boxScore.rebounds,
-        boxScore.remoteId
-      ];
-      var queryResponse = this.executeTransaction(query, queryArgs);
-      return queryResponse;
-    },
-    updateBoxScore: function(boxScore){
-      var query = 'UPDATE box_scores SET player_id = ?, game_id = ?, one_point_attempt = ?, one_point_make = ?, two_point_attempt = ?, two_point_make = ?, three_point_attempt = ?, three_point_make = ?, turnovers = ?, assists = ?, fouls = ?, rebounds = ?, remote_id = ? WHERE rowid = ?';
-      var queryArgs = [
-        boxScore.playerId,
-        boxScore.gameId,
-        boxScore.onePointAttempts,
-        boxScore.onePointBaskets,
-        boxScore.twoPointAttempts,
-        boxScore.twoPointBaskets,
-        boxScore.threePointAttempts,
-        boxScore.threePointBaskets,
+        boxScore.threePointMakes,
         boxScore.turnovers,
         boxScore.assists,
         boxScore.fouls,
         boxScore.rebounds,
         boxScore.remoteId,
+        boxScore.inGame
+      ];
+      var queryResponse = this.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    updateBoxScore: function(boxScore){
+      var query = 'UPDATE box_scores SET player_id = ?, game_id = ?, one_point_attempts = ?, one_point_makes = ?, two_point_attempts = ?, two_point_makes = ?, three_point_attempts = ?, three_point_makes = ?, turnovers = ?, assists = ?, fouls = ?, rebounds = ?, remote_id = ?, in_game = ? WHERE rowid = ?';
+      var queryArgs = [
+        boxScore.playerId,
+        boxScore.gameId,
+        boxScore.onePointAttempts,
+        boxScore.onePointMakes,
+        boxScore.twoPointAttempts,
+        boxScore.twoPointMakes,
+        boxScore.threePointAttempts,
+        boxScore.threePointMakes,
+        boxScore.turnovers,
+        boxScore.assists,
+        boxScore.fouls,
+        boxScore.rebounds,
+        boxScore.remoteId,
+        boxScore.inGame,
         boxScore.rowid
       ];
       var queryResponse = this.executeTransaction(query, queryArgs);

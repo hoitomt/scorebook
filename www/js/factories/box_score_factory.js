@@ -1,21 +1,21 @@
 app.factory('BoxScoreFactory', function($q, DatabaseService) {
 
   var BoxScoreFactory = function(args) {
-    this.rowid = args.rowid;
+    this.rowid = args.rowid || 0;
     this.playerId = args.playerId || args.player_id || null;
     this.gameId = args.gameId || args.game_id || null;
     this.remoteId = args.remoteId || args.remote_id || null;
     this.onePointAttempts = args.onePointAttempts || args.one_point_attempts || 0;
-    this.onePointBaskets = args.onePointBaskets || args.one_point_baskets || 0;
+    this.onePointMakes = args.onePointMakes || args.one_point_makes || 0;
     this.twoPointAttempts = args.twoPointAttempts || args.two_point_attempts || 0;
-    this.twoPointBaskets = args.twoPointBaskets || args.two_point_baskets || 0;
+    this.twoPointMakes = args.twoPointMakes || args.two_point_makes || 0;
     this.threePointAttempts = args.threePointAttempts || args.three_point_attempts || 0;
-    this.threePointBaskets = args.threePointBaskets || args.three_point_baskets || 0;
+    this.threePointMakes = args.threePointMakes || args.three_point_makes || 0;
     this.turnovers = args.turnovers || 0;
     this.rebounds = args.rebounds || 0;
     this.assists = args.assists || 0;
     this.fouls = args.fouls || 0;
-    this.inGame = args.inGame || false;
+    this.inGame = args.inGame || args.in_game || false;
   };
 
   BoxScoreFactory.boxScores = function(gameId) {
@@ -52,9 +52,18 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
     return angular.isUndefined(this.rowid) || this.rowid == 0;
   };
 
+  BoxScoreFactory.prototype.getInGame = function() {
+    if(this.inGame == "false" || this.inGame == 0 || !this.inGame) {
+      return false;
+    } else {
+      return true;
+    }
+    return angular.isUndefined(this.rowid) || this.rowid == 0;
+  };
+
   BoxScoreFactory.prototype.save = function() {
     console.log("Persist to WebSQL");
-    if(this.newRecord){
+    if(this.newRecord()){
       var deferred = $q.defer();
       var _this = this;
       DatabaseService.insertBoxScore(this.values()).then(function(res) {
@@ -68,7 +77,7 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
   };
 
   BoxScoreFactory.prototype.newRecord = function() {
-    return this.rowid != 0;
+    return this.rowid == 0;
   };
 
 
@@ -78,15 +87,17 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
       gameId: this.gameId,
       remoteId: this.remoteId,
       onePointAttempts: this.onePointAttempts,
-      onePointBaskets: this.onePointBaskets,
+      onePointMakes: this.onePointMakes,
       twoPointAttempts: this.twoPointAttempts,
-      twoPointBaskets: this.twoPointBaskets,
+      twoPointMakes: this.twoPointMakes,
       threePointAttempts: this.threePointAttempts,
-      threePointBaskets: this.threePointBaskets,
+      threePointMakes: this.threePointMakes,
       turnovers: this.turnovers,
       rebounds: this.rebounds,
       assists: this.assists,
-      fouls: this.fouls
+      fouls: this.fouls,
+      inGame: this.inGame,
+      rowid: this.rowid
     };
   };
 
@@ -104,15 +115,16 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
       name: this.name,
       number: this.number,
       one_point_attempts: this.onePointAttempts,
-      one_point_baskets: this.onePointBaskets,
+      one_point_baskets: this.onePointMakes,
       two_point_attempts: this.twoPointAttempts,
-      two_point_baskets: this.twoPointBaskets,
+      two_point_baskets: this.twoPointMakes,
       three_point_attempts: this.threePointAttempts,
-      three_point_baskets: this.threePointBaskets,
+      three_point_baskets: this.threePointMakes,
       turnovers: this.turnovers,
       rebounds: this.rebounds,
       assists: this.assists,
       fouls: this.fouls,
+      inGame: this.inGame
     };
   };
 
@@ -122,11 +134,11 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
 
   BoxScoreFactory.prototype.addScore = function(amount) {
     if(amount == 1) {
-      this.onePointBaskets += 1;
+      this.onePointMakes += 1;
     } else if(amount == 2) {
-      this.twoPointBaskets += 1;
+      this.twoPointMakes += 1;
     } else if(amount == 3) {
-      this.threePointBaskets += 1;
+      this.threePointMakes += 1;
     } else {
       // Unknown score amount
     }
@@ -163,23 +175,23 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
 
   BoxScoreFactory.prototype.scoringLine = function() {
     var totalPoints = this.totalPoints() + ' points: '
-    var twoPointers = '2: ' + this.twoPointBaskets + '-' + this.twoPointAttempts;
-    var threePointers = '3: ' + this.threePointBaskets + '-' + this.threePointAttempts;
-    var freeThrows = 'ft: ' + this.onePointBaskets + '-' + this.onePointAttempts;
+    var twoPointers = '2: ' + this.twoPointMakes + '-' + this.twoPointAttempts;
+    var threePointers = '3: ' + this.threePointMakes + '-' + this.threePointAttempts;
+    var freeThrows = 'ft: ' + this.onePointMakes + '-' + this.onePointAttempts;
     return totalPoints + twoPointers + ' | ' + threePointers + ' | ' + freeThrows;
   }
 
   BoxScoreFactory.prototype.totalPoints = function() {
-    return this.onePointBaskets * 1 + this.twoPointBaskets * 2 + this.threePointBaskets * 3
+    return this.onePointMakes * 1 + this.twoPointMakes * 2 + this.threePointMakes * 3
   }
 
   BoxScoreFactory.prototype.removeScore = function(amount) {
     if(amount == 1) {
-      this.onePointBaskets = this.onePointBaskets >= 1 ? this.onePointBaskets - 1 : 0;
+      this.onePointMakes = this.onePointMakes >= 1 ? this.onePointMakes - 1 : 0;
     } else if(amount == 2) {
-      this.twoPointBaskets = this.twoPointBaskets >= 1 ? this.twoPointBaskets - 1 : 0;
+      this.twoPointMakes = this.twoPointMakes >= 1 ? this.twoPointMakes - 1 : 0;
     } else if(amount == 3) {
-      this.threePointBaskets = this.threePointBaskets >= 1 ? this.threePointBaskets - 1 : 0;
+      this.threePointMakes = this.threePointMakes >= 1 ? this.threePointMakes - 1 : 0;
     } else {
       // Unknown score amount
     }
