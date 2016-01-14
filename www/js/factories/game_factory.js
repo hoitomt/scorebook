@@ -1,11 +1,11 @@
 app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, DatabaseService) {
   var GameFactory = function(args) {
-    this.rowid = args.rowid || null;
+    this.rowid = args.rowid || 0;
     this.date = args.date;
     this.opponent = args.opponent;
     this.points = args.points || 0;
-    this.turnovers = args.turnovers || 0;
     this.fouls = args.fouls || 0;
+    this.turnovers = args.turnovers || 0;
     this.teamId = args.teamId || args.team_id || null;
     this.remoteId = args.remoteId || args.remote_id || null;
     this.players = new Array;
@@ -63,7 +63,7 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
 
   GameFactory.prototype.save = function() {
     console.log("Persist to WebSQL");
-    if(this.newRecord){
+    if(this.newRecord()){
       var _this = this;
       DatabaseService.insertGame(this.values()).then(function(res) {
         _this.rowid = res.insertId;
@@ -74,7 +74,7 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
   };
 
   GameFactory.prototype.newRecord = function() {
-    return this.rowid != 0;
+    return this.rowid == 0;
   };
 
   GameFactory.prototype.team = function() {
@@ -128,9 +128,10 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
       opponent: this.opponent,
       players: this.players,
       points: this.points,
-      turnovers: this.turnovers,
       fouls: this.fouls,
-      remoteId: this.remoteId
+      turnovers: this.turnovers,
+      remoteId: this.remoteId,
+      rowid: this.rowid
     };
   };
 

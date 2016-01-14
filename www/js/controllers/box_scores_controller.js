@@ -53,6 +53,7 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
   $scope.addScore = function(game, boxScore, amount) {
     boxScore.addScore(amount);
     game.points += amount;
+    game.save();
     boxScore.save();
   };
 
@@ -71,12 +72,14 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
   $scope.addTurnover = function(game, boxScore) {
     boxScore.addTurnover();
     game.turnovers += 1;
+    game.save();
     boxScore.save();
   }
 
   $scope.addFoul = function(game, boxScore) {
     boxScore.addFoul();
     game.fouls += 1;
+    game.save();
     boxScore.save();
   }
 
@@ -84,6 +87,7 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
   $scope.removeScore = function(game, boxScore, amount) {
     boxScore.removeScore(amount);
     game.points = game.points > amount ? game.points - amount : 0;
+    game.save();
     boxScore.save();
   };
 
@@ -101,19 +105,21 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
 
   $scope.removeTurnover = function(game, boxScore) {
     boxScore.removeTurnover();
-    game.turnovers  = game.fouls > 0 ? game.fouls - 1 : 0;
+    game.turnovers  = game.turnovers > 0 ? game.turnovers - 1 : 0;
+    game.save();
     boxScore.save();
   }
 
   $scope.removeFoul = function(game, boxScore) {
     boxScore.removeFoul();
     game.fouls = game.fouls > 0 ? game.fouls - 1 : 0
+    game.save();
     boxScore.save();
   }
 
   $scope.clearFouls = function(game) {
     game.fouls = 0;
-    boxScore.save();
+    game.save();
   }
 
 
