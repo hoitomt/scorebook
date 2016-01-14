@@ -1,10 +1,7 @@
 app.factory('NetworkSnifferService', function($http, $q, $cookies, Config) {
   var NetworkSnifferService = {
     isConnected: function() {
-      if($cookies.get('connected') == 'false')
-        return false;
-      else
-        return true;
+      return $cookies.get('connected') != 'false';
     },
     testConnection: function() {
       console.log("Test the connection");

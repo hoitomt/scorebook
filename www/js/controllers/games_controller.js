@@ -3,11 +3,12 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
   $scope.showCorrectionPanel = false;
 
   // Default the select list to "Select Team"
-  $scope.game = {};
-  $scope.game.teamKey = null;
+  $scope.game = {"teamId": null};
+  $scope.game.rowid = null;
 
-  $scope.teams = TeamFactory.teams();
-  $scope.hideBackButton = false;
+  TeamFactory.teams().then(function(teams){
+    $scope.teams = teams;
+  });
 
   if($stateParams.gameId) {
     var gameKey = $stateParams.gameId
@@ -25,13 +26,12 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
       console.log("Invalid Game Create");
       $scope.showErrors = true;
     } else {
-      var team = TeamFactory.find(gameParams.teamKey);
-      if(team) {
-        gameParams.players = team.players;
-        var game = new GameFactory(gameParams);
-        game.create();
-        $state.go('tab.gameDetail', {gameId: game.key});
-      }
+      var game = new GameFactory(gameParams);
+      // game.teamId = gameParams.teamId;
+      game.save();
+      game.createBoxScores().then(function(){
+        $state.go('tab.gameBoxScore', {gameId: game.rowid});
+      });
     }
   };
 
@@ -43,80 +43,6 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
   function resetOpponent() {
     $scope.game = {opponent: "", date: "", teamKey: null};
   };
-
-  $scope.moveToBench = function(game, player) {
-    player.inGame = false; game.updatePlayerStatus();
-  };
-
-  $scope.putInGame = function(game, player) {
-    player.inGame = true; game.updatePlayerStatus();
-  }
-
-  $scope.addScore = function(game, player, amount) {
-    player.addScore(amount);
-    game.points += amount;
-    game.save();
-  };
-
-  $scope.addShotAttempt = function(game, player, amount) {
-    player.addShotAttempt(amount); game.save();
-  };
-
-  $scope.addRebound = function(game, player) {
-    player.addRebound(); game.save();
-  }
-
-  $scope.addAssist = function(game, player) {
-    player.addAssist(); game.save();
-  }
-
-  $scope.addTurnover = function(game, player) {
-    player.addTurnover();
-    game.turnovers += 1;
-    game.save();
-  }
-
-  $scope.addFoul = function(game, player) {
-    player.addFoul();
-    game.fouls += 1;
-    game.save();
-  }
-
-  // Corrections
-  $scope.removeScore = function(game, player, amount) {
-    player.removeScore(amount);
-    game.points = game.points > amount ? game.points - amount : 0;
-    game.save();
-  };
-
-  $scope.removeShotAttempt = function(game, player, amount) {
-    player.removeShotAttempt(amount); game.save();
-  };
-
-  $scope.removeRebound = function(game, player) {
-    player.removeRebound(); game.save();
-  }
-
-  $scope.removeAssist = function(game, player) {
-    player.removeAssist(); game.save();
-  }
-
-  $scope.removeTurnover = function(game, player) {
-    player.removeTurnover();
-    game.turnovers  = game.fouls > 0 ? game.fouls - 1 : 0;
-    game.save();
-  }
-
-  $scope.removeFoul = function(game, player) {
-    player.removeFoul();
-    game.fouls = game.fouls > 0 ? game.fouls - 1 : 0
-    game.save();
-  }
-
-  $scope.clearFouls = function(game) {
-    game.fouls = 0;
-    game.save();
-  }
 
   function datePickerCallback(selectedDate) {
     if(selectedDate)
