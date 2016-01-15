@@ -14,7 +14,7 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
     var players = [];
     DatabaseService.selectPlayers(teamId).then(function(res) {
       for(var i = 0; i < res.rows.length; i++) {
-        var player = new PlayerFactory(res.rows[i]);
+        var player = new PlayerFactory(res.rows.item(i));
         players.push(player);
       }
       deferred.resolve(players);
@@ -29,7 +29,7 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
     console.log("Retrieve Player: ", playerId);
     var deferred = $q.defer();
     DatabaseService.selectPlayer(teamId).then(function(res) {
-      player = new PlayerFactory(res.rows[0]);
+      player = new PlayerFactory(res.rows.item(0));
       deferred.resolve(player);
     }, function(e){
       console.log(e.message);

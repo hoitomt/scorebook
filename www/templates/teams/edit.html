@@ -1,7 +1,7 @@
 <ion-view view-title="{{team.name}}">
   <ion-content class="padding">
     <form name="$parent.teamRoster" ng-submit="createPlayer(teamRoster.$valid, team, player)" novalidate>
-      <h1>Add Players to {{team.name}} ({{team.rowid}})</h1>
+      <h1>Add Players to {{team.name}}</h1>
       <div class="list list-inset">
         <div class="row">
           <div class="col col-20">
@@ -55,7 +55,6 @@
         <div class="col col-10">
           <a ng-click="deletePlayer(player)" class="button button-small button-full button-assertive">Remove</a>
         </div>
-        <div class="col col-10"><small>{{player.remoteId}}</small></div>
       </div>
     </div>
   </ion-content>

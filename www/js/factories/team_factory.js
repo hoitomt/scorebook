@@ -14,10 +14,12 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
 
     DatabaseService.selectTeams().then(function(res) {
       var teamArray = new Array;
-      if(res.rows.length == 0) return;
+      if(res.rows.length == 0) {
+        return;
+      }
       var teamsParams = res.rows;
       for(var i = 0; i < teamsParams.length; i++) {
-        team = teamsParams[i];
+        var team = teamsParams.item(i);
         teamArray.push(new TeamFactory(team));
       }
       deferred.resolve(teamArray);
@@ -34,7 +36,7 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
 
     DatabaseService.selectTeam(teamId).then(function(res) {
       if(res.rows.length == 0) return;
-      var team = new TeamFactory(res.rows[0]);
+      var team = new TeamFactory(res.rows.item(0));
       deferred.resolve(team);
     }, function(e) {
       deferred.reject(e);
@@ -45,14 +47,24 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
 
   TeamFactory.prototype.save = function() {
     console.log("Persist to WebSQL");
+    var deferred = $q.defer();
     if(this.newRecord){
       var _this = this;
       DatabaseService.insertTeam(this.values()).then(function(res) {
         _this.rowid = res.insertId;
+        deferred.resolve(_this);
+      }, function(e) {
+        deferred.reject(e)
       });
     } else {
-      DatabaseService.updateTeam(this.values());
+      DatabaseService.updateTeam(this.values()).then(function(res) {
+        deferred.resolve(_this);
+      }, function(e) {
+        deferred.reject(e)
+      });
     }
+
+    return deferred.promise;
   };
 
   TeamFactory.prototype.newRecord = function() {

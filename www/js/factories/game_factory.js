@@ -36,7 +36,7 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
       if(res.rows.length == 0) return;
       var gamesParams = res.rows;
       for(var i = 0; i < gamesParams.length; i++) {
-        gameArray.push(new GameFactory(gamesParams[i]));
+        gameArray.push(new GameFactory(gamesParams.item(i)));
       }
       deferred.resolve(gameArray);
     }, function(e) {
@@ -52,7 +52,7 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
 
     DatabaseService.selectGame(gameId).then(function(res) {
       if(res.rows.length == 0) return;
-      var game = new GameFactory(res.rows[0]);
+      var game = new GameFactory(res.rows.item(0));
       deferred.resolve(game);
     }, function(e) {
       deferred.reject(e);

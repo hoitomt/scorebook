@@ -18,7 +18,6 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       LocalDatabaseService.getDatabase().then(function(db) {
         db.transaction(function(tx){
           tx.executeSql(query, args, function(tx, res){
-            console.log("DB Transaction Complete");
             deferred.resolve(res);
           }, function(e){
             console.log("ERROR with query: " + " ERROR: " + e.message);

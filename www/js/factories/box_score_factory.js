@@ -24,7 +24,7 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
     var boxScores = [];
     DatabaseService.selectBoxScores(gameId).then(function(res) {
       for(var i = 0; i < res.rows.length; i++) {
-        var boxScore = new BoxScoreFactory(res.rows[i]);
+        var boxScore = new BoxScoreFactory(res.rows.item(i));
         boxScores.push(boxScore);
       }
       deferred.resolve(boxScores);
@@ -39,7 +39,7 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
     console.log("Retrieve Player: ", playerId);
     var deferred = $q.defer();
     DatabaseService.selectPlayer(playerId).then(function(res) {
-      player = new BoxScoreFactory(res.rows[0]);
+      player = new BoxScoreFactory(res.rows.item(0));
       deferred.resolve(player);
     }, function(e){
       console.log(e.message);

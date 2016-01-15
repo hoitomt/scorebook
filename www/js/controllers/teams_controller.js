@@ -1,6 +1,7 @@
 app.controller('teamsController', function($scope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
   // Use for button display
   TeamFactory.teams().then(function(teams){
+    console.log("TeamController:", teams.length);
     $scope.teams = teams;
   });
 
@@ -25,8 +26,11 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
       $scope.showErrors = true;
     } else {
       var team = new TeamFactory(teamParams);
-      team.save();
-      $state.go('tab.teamDetail', {team: team});
+      team.save().then(function(team) {
+        $state.go('tab.teamDetail', {teamId: team.rowid});
+      }, function(e) {
+        console.log("Invalid Team Create", e);
+      });
     }
   };
 
