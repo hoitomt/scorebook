@@ -1,25 +1,29 @@
-app.factory('DatabaseService', function($q, $cordovaSQLite){
+app.factory('DatabaseService', function($q, LocalDatabaseService){
   var DatabaseService = {
     runMigrations: function(){
       console.log("Run the database migrations");
-      db.transaction(function (tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS users (first_name TEXT, last_name TEXT, email TEXT, api_key TEXT, remote_id INT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS teams (name TEXT, user_id INT, remote_id INT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS games (opponent TEXT, date TEXT, team_id INT, points INT, fouls INT, turnovers INT, remote_id INT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS players (name TEXT, number INT, team_id INT, remote_id INT)');
-        tx.executeSql('CREATE TABLE IF NOT EXISTS box_scores (player_id INT, game_id INT, one_point_attempts INT, one_point_makes INT, two_point_attempts INT, two_point_makes INT, three_point_attempts INT, three_point_makes INT, turnovers INT, assists INT, fouls INT, rebounds INT, remote_id INT, in_game INT)');
+      LocalDatabaseService.getDatabase().then(function(db){
+        db.transaction(function (tx) {
+          tx.executeSql('CREATE TABLE IF NOT EXISTS users (first_name TEXT, last_name TEXT, email TEXT, api_key TEXT, remote_id INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS teams (name TEXT, user_id INT, remote_id INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS games (opponent TEXT, date TEXT, team_id INT, points INT, fouls INT, turnovers INT, remote_id INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS players (name TEXT, number INT, team_id INT, remote_id INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS box_scores (player_id INT, game_id INT, one_point_attempts INT, one_point_makes INT, two_point_attempts INT, two_point_makes INT, three_point_attempts INT, three_point_makes INT, turnovers INT, assists INT, fouls INT, rebounds INT, remote_id INT, in_game INT)');
+        });
       });
     },
     executeTransaction: function(query, args){
       var deferred = $q.defer();
       console.log("Execute Query: " + query + " With args: " + args);
-      db.transaction(function(tx){
-        tx.executeSql(query, args, function(tx, res){
-          console.log("DB Transaction Complete");
-          deferred.resolve(res);
-        }, function(e){
-          console.log("ERROR with query: " + " ERROR: " + e.message);
-          deferred.reject(e);
+      LocalDatabaseService.getDatabase().then(function(db) {
+        db.transaction(function(tx){
+          tx.executeSql(query, args, function(tx, res){
+            console.log("DB Transaction Complete");
+            deferred.resolve(res);
+          }, function(e){
+            console.log("ERROR with query: " + " ERROR: " + e.message);
+            deferred.reject(e);
+          });
         });
       });
       return deferred.promise;

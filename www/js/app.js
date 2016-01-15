@@ -1,12 +1,13 @@
 var host = 'http://localhost:3000/api/v1';
-var db = null;
+// var db = null;
 
 var app = angular.module('scorebook', ['ionic', 'ngCookies', 'ngMessages', 'ionic-datepicker', 'ngCordova'])
 
 app.constant('Config', {
   'url_auth': host + '/authentication',
   'url_team': host + '/teams',
-  'url_game': host + '/games'
+  'url_game': host + '/games',
+  'database_name': 'scorebook'
 });
 
 app.run(function($ionicPlatform, $rootScope, $cookies, $cordovaSQLite, $http, AuthenticationService, RootScopeService, DatabaseService) {
@@ -21,12 +22,11 @@ app.run(function($ionicPlatform, $rootScope, $cookies, $cordovaSQLite, $http, Au
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    if(ionic.Platform.isIpad) {
-      db = $cordovaSQLite.openDB({ name: "scorebook" });
-    } else {
-      db = openDatabase('scorebook', '1.0', 'Scorebook Database', 10 * 1024 * 1024);
-
-    }
+    // if(ionic.Platform.isIpad) {
+    //   db = $cordovaSQLite.openDB({ name: "scorebook" });
+    // } else {
+    //   db = openDatabase('scorebook', '1.0', 'Scorebook Database', 10 * 1024 * 1024);
+    // }
 
     DatabaseService.runMigrations();
   });
