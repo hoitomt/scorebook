@@ -51,7 +51,7 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
   };
 
   $scope.deletePlayer = function(playerParams) {
-    console.log("Remove Player from Team: ", team, "Player: ", playerParams);
+    console.log("Player: ", playerParams);
     PlayerFactory.deletePlayer(playerParams.rowid).then(function(){
       refreshPlayers(playerParams.teamId);
     });

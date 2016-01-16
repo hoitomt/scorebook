@@ -1,13 +1,14 @@
 app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, DatabaseService) {
   var GameFactory = function(args) {
-    this.rowid = args.rowid || 0;
+    this.rowid = args.rowid || null;
+    this.remoteId = args.remoteId || args.remote_id || null;
+    this.needsSync = args.needsSync || args.needs_sync || true;
     this.date = args.date;
     this.opponent = args.opponent;
     this.points = args.points || 0;
     this.fouls = args.fouls || 0;
     this.turnovers = args.turnovers || 0;
     this.teamId = args.teamId || args.team_id || null;
-    this.remoteId = args.remoteId || args.remote_id || null;
     this.players = new Array;
 
     this.inGamePlayers = new Array;
@@ -74,7 +75,7 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
   };
 
   GameFactory.prototype.newRecord = function() {
-    return this.rowid == 0;
+    return !this.rowid;
   };
 
   GameFactory.prototype.team = function() {
@@ -131,7 +132,8 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
       fouls: this.fouls,
       turnovers: this.turnovers,
       remoteId: this.remoteId,
-      rowid: this.rowid
+      rowid: this.rowid,
+      needsSync: this.needsSync
     };
   };
 

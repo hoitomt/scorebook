@@ -10,7 +10,7 @@ app.constant('Config', {
   'database_name': 'scorebook'
 });
 
-app.run(function($ionicPlatform, $rootScope, $cookies, $cordovaSQLite, $http, AuthenticationService, RootScopeService, DatabaseService) {
+app.run(function($ionicPlatform, $rootScope, $cookies, $http, AuthenticationService, RootScopeService, DatabaseService) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -22,12 +22,6 @@ app.run(function($ionicPlatform, $rootScope, $cookies, $cordovaSQLite, $http, Au
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    // if(ionic.Platform.isIpad) {
-    //   db = $cordovaSQLite.openDB({ name: "scorebook" });
-    // } else {
-    //   db = openDatabase('scorebook', '1.0', 'Scorebook Database', 10 * 1024 * 1024);
-    // }
-
     DatabaseService.runMigrations();
   });
 

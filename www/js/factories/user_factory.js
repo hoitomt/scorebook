@@ -2,6 +2,9 @@ app.factory('UserFactory', function($http, $cookies, $q, Config) {
 
   var UserFactory = function(args) {
     console.log("New User Factory", args);
+    this.rowid = args.rowid || null;
+    this.remoteId = args.remoteId || args.remote_id || null;
+    this.needsSync = args.needsSync || args.needs_sync || true;
     this.email = args.email;
     this.password = args.password;
     this.firstName = args.firstName;

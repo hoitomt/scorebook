@@ -4,11 +4,11 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       console.log("Run the database migrations");
       LocalDatabaseService.getDatabase().then(function(db){
         db.transaction(function (tx) {
-          tx.executeSql('CREATE TABLE IF NOT EXISTS users (first_name TEXT, last_name TEXT, email TEXT, api_key TEXT, remote_id INT)');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS teams (name TEXT, user_id INT, remote_id INT)');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS games (opponent TEXT, date TEXT, team_id INT, points INT, fouls INT, turnovers INT, remote_id INT)');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS players (name TEXT, number INT, team_id INT, remote_id INT)');
-          tx.executeSql('CREATE TABLE IF NOT EXISTS box_scores (player_id INT, game_id INT, one_point_attempts INT, one_point_makes INT, two_point_attempts INT, two_point_makes INT, three_point_attempts INT, three_point_makes INT, turnovers INT, assists INT, fouls INT, rebounds INT, remote_id INT, in_game INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS users (remote_id INT, first_name TEXT, last_name TEXT, email TEXT, api_key TEXT, needs_sync INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS teams (remote_id INT, name TEXT, user_id INT, needs_sync INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS games (remote_id INT, opponent TEXT, date TEXT, team_id INT, points INT, fouls INT, turnovers INT, needs_sync INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS players (remote_id INT, name TEXT, number INT, team_id INT, needs_sync INT)');
+          tx.executeSql('CREATE TABLE IF NOT EXISTS box_scores (remote_id INT, player_id INT, game_id INT, one_point_attempts INT, one_point_makes INT, two_point_attempts INT, two_point_makes INT, three_point_attempts INT, three_point_makes INT, turnovers INT, assists INT, fouls INT, rebounds INT, in_game INT)');
         });
       });
     },
@@ -38,14 +38,14 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       return queryResponse;
     },
     insertTeam: function(team){
-      var query = "INSERT INTO teams (name, user_id, remote_id) VALUES (?,?,?)"
-      var queryArgs = [team.name, team.userId, team.remoteId];
+      var query = "INSERT INTO teams (name, user_id, remote_id, needs_sync) VALUES (?,?,?,?)"
+      var queryArgs = [team.name, team.userId, team.remoteId, team.needsSync];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;
     },
     updateTeam: function(team){
-      var query = 'UPDATE teams SET name = ?, user_id = ?, remote_id = ? WHERE id = ?';
-      var queryArgs = [team.name, team.userId, team.remoteId, team.rowid];
+      var query = 'UPDATE teams SET name = ?, user_id = ?, remote_id = ?, needs_sync = ? WHERE id = ?';
+      var queryArgs = [team.name, team.userId, team.remoteId, team.needsSync, team.rowid];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;
     },
@@ -60,14 +60,14 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       return queryResponse;
     },
     insertPlayer: function(player){
-      var query = "INSERT INTO players (name, number, team_id, remote_id) VALUES (?,?,?,?)"
-      var queryArgs = [player.name, player.number, player.teamId, player.remoteId];
+      var query = "INSERT INTO players (name, number, team_id, remote_id, needs_sync) VALUES (?,?,?,?,?)"
+      var queryArgs = [player.name, player.number, player.teamId, player.remoteId, player.needsSync];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;
     },
     updatePlayer: function(player){
-      var query = 'UPDATE players SET name = ?, number = ?, team_id = ?, remote_id = ? WHERE rowid = ?';
-      var queryArgs = [player.name, player.number, player.teamId, player.remoteId, player.rowid];
+      var query = 'UPDATE players SET name = ?, number = ?, team_id = ?, remote_id = ?, needs_sync = ? WHERE rowid = ?';
+      var queryArgs = [player.name, player.number, player.teamId, player.remoteId, player.needsSync, player.rowid];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;
     },
@@ -88,14 +88,14 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       return queryResponse;
     },
     insertGame: function(game){
-      var query = "INSERT INTO games (opponent, date, team_id, remote_id, points, fouls, turnovers) VALUES (?,?,?,?,?,?,?)"
-      var queryArgs = [game.opponent, game.date, game.teamId, game.remoteId, game.points, game.fouls, game.turnovers];
+      var query = "INSERT INTO games (opponent, date, team_id, remote_id, points, fouls, turnovers, needs_sync) VALUES (?,?,?,?,?,?,?,?)"
+      var queryArgs = [game.opponent, game.date, game.teamId, game.remoteId, game.points, game.fouls, game.turnovers, game.needsSync];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;
     },
     updateGame: function(game){
-      var query = 'UPDATE games SET opponent = ?, date = ?, team_id = ?, remote_id = ?, points = ?, fouls = ?, turnovers = ? WHERE rowid = ?';
-      var queryArgs = [game.opponent, game.date, game.teamId, game.remoteId, game.points, game.fouls, game.turnovers, game.rowid];
+      var query = 'UPDATE games SET opponent = ?, date = ?, team_id = ?, remote_id = ?, points = ?, fouls = ?, turnovers = ?, needs_sync WHERE rowid = ?';
+      var queryArgs = [game.opponent, game.date, game.teamId, game.remoteId, game.points, game.fouls, game.turnovers, game.needsSync, game.rowid];
       var queryResponse = this.executeTransaction(query, queryArgs);
       return queryResponse;
     },

@@ -1,10 +1,10 @@
 app.factory('BoxScoreFactory', function($q, DatabaseService) {
 
   var BoxScoreFactory = function(args) {
-    this.rowid = args.rowid || 0;
+    this.rowid = args.rowid || null;
+    this.remoteId = args.remoteId || args.remote_id || null;
     this.playerId = args.playerId || args.player_id || null;
     this.gameId = args.gameId || args.game_id || null;
-    this.remoteId = args.remoteId || args.remote_id || null;
     this.onePointAttempts = args.onePointAttempts || args.one_point_attempts || 0;
     this.onePointMakes = args.onePointMakes || args.one_point_makes || 0;
     this.twoPointAttempts = args.twoPointAttempts || args.two_point_attempts || 0;
@@ -49,7 +49,7 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
   }
 
   BoxScoreFactory.prototype.newRecord = function() {
-    return angular.isUndefined(this.rowid) || this.rowid == 0;
+    return !this.rowid;
   };
 
   BoxScoreFactory.prototype.getInGame = function() {
@@ -58,7 +58,6 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
     } else {
       return true;
     }
-    return angular.isUndefined(this.rowid) || this.rowid == 0;
   };
 
   BoxScoreFactory.prototype.save = function() {
@@ -75,11 +74,6 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
       return DatabaseService.updateBoxScore(this.values());
     }
   };
-
-  BoxScoreFactory.prototype.newRecord = function() {
-    return this.rowid == 0;
-  };
-
 
   BoxScoreFactory.prototype.values = function() {
     return {

@@ -3,9 +3,10 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
 
   var TeamFactory = function(args) {
     this.rowid = args.rowid || null;
+    this.remoteId = args.remoteId || args.remote_id || null;
+    this.needsSync = args.needsSync || args.needs_sync || true;
     this.name = args.name;
     this.userId = args.userId || UserFactory.userId() || 0;
-    this.remoteId = args.remoteId || 0;
   };
 
   TeamFactory.teams = function(number) {
@@ -68,7 +69,7 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
   };
 
   TeamFactory.prototype.newRecord = function() {
-    return this.rowid != 0;
+    return !this.rowid;
   };
 
   TeamFactory.prototype.sync = function() {
@@ -109,7 +110,8 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
       rowid: this.rowid,
       name: this.name,
       userId: this.userId,
-      remoteId: this.remoteId
+      remoteId: this.remoteId,
+      needsSync: this.needsSync
     };
   };
 
