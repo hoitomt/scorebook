@@ -44,15 +44,17 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
       playerParams.teamId = team.rowid;
       var player = new PlayerFactory(playerParams);
       player.save().then(function(player){
+        team.setNeedsSync(true);
         resetNewPlayerForm();
         refreshPlayers(team.rowid);
       });
     }
   };
 
-  $scope.deletePlayer = function(playerParams) {
+  $scope.deletePlayer = function(team, playerParams) {
     console.log("Player: ", playerParams);
     PlayerFactory.deletePlayer(playerParams.rowid).then(function(){
+      team.setNeedsSync(true);
       refreshPlayers(playerParams.teamId);
     });
   };

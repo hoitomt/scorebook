@@ -1,4 +1,4 @@
-app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService, DatabaseService) {
+app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseService) {
   var localStorageIndexKey = 'teams_keys';
 
   var TeamFactory = function(args) {
@@ -9,11 +9,21 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
     this.userId = args.userId || UserFactory.userId() || 0;
   };
 
-  TeamFactory.teams = function(number) {
+  TeamFactory.teams = function() {
+    var teamQuery = DatabaseService.selectTeams;
+    return this.queryForTeams(teamQuery);
+  }
+
+  TeamFactory.unsyncedTeams = function() {
+    var teamQuery = DatabaseService.selectUnsyncedTeams;
+    return this.queryForTeams(teamQuery);
+  }
+
+  TeamFactory.queryForTeams = function(teamQuery) {
     console.log("Retrieve all teams");
     var deferred = $q.defer();
 
-    DatabaseService.selectTeams().then(function(res) {
+    teamQuery().then(function(res) {
       var teamArray = new Array;
       if(res.rows.length == 0) {
         return;
@@ -46,10 +56,15 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
     return deferred.promise;
   };
 
+  TeamFactory.prototype.setNeedsSync = function(isNeedsSync) {
+    this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
+    this.save();
+  }
+
   TeamFactory.prototype.save = function() {
     console.log("Persist to WebSQL");
     var deferred = $q.defer();
-    if(this.newRecord){
+    if(this.newRecord()){
       var _this = this;
       DatabaseService.insertTeam(this.values()).then(function(res) {
         _this.rowid = res.insertId;
@@ -72,24 +87,24 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, SyncService,
     return !this.rowid;
   };
 
-  TeamFactory.prototype.sync = function() {
-    console.log("Sync the team: ", this);
-    var syncFunction = null;
-    if(team.remoteId){
-      syncFunction = SyncService.putTeam;
-    } else {
-      syncFunction = SyncService.postTeam;
-    }
-    var that = this;
-    syncFunction(that).then(function(data) {
-      that.remoteId = data.id;
-      that.syncPlayers(data.players);
-      that.save();
-      console.log("sync complete");
-    }, function(reject) {
-      console.log("sync failed");
-    });
-  };
+  // TeamFactory.prototype.sync = function() {
+  //   console.log("Sync the team: ", this);
+  //   var syncFunction = null;
+  //   if(team.remoteId){
+  //     syncFunction = SyncService.putTeam;
+  //   } else {
+  //     syncFunction = SyncService.postTeam;
+  //   }
+  //   var that = this;
+  //   syncFunction(that).then(function(data) {
+  //     that.remoteId = data.id;
+  //     that.syncPlayers(data.players);
+  //     that.save();
+  //     console.log("sync complete");
+  //   }, function(reject) {
+  //     console.log("sync failed");
+  //   });
+  // };
 
   TeamFactory.prototype.syncPlayers = function(playerData) {
     // sync the players

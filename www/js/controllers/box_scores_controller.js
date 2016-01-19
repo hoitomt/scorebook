@@ -43,43 +43,55 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
   }
 
   $scope.moveToBench = function(game, boxScore) {
-    boxScore.inGame = false; boxScore.save(); refreshPlayerStatus();
+    boxScore.inGame = false;
+    game.setNeedsSync(true);
+    boxScore.save();
+    refreshPlayerStatus();
   };
 
   $scope.putInGame = function(game, boxScore) {
-    boxScore.inGame = true; boxScore.save(); refreshPlayerStatus();
+    boxScore.inGame = true;
+    game.setNeedsSync(true);
+    boxScore.save();
+    refreshPlayerStatus();
   }
 
   $scope.addScore = function(game, boxScore, amount) {
     boxScore.addScore(amount);
     game.points += amount;
-    game.save();
+    game.setNeedsSync(true);
     boxScore.save();
   };
 
   $scope.addShotAttempt = function(game, boxScore, amount) {
-    boxScore.addShotAttempt(amount); boxScore.save();
+    boxScore.addShotAttempt(amount)
+    game.setNeedsSync(true);
+    boxScore.save();
   };
 
   $scope.addRebound = function(game, boxScore) {
-    boxScore.addRebound(); boxScore.save();
+    boxScore.addRebound()
+    game.setNeedsSync(true);
+    boxScore.save();
   }
 
   $scope.addAssist = function(game, boxScore) {
-    boxScore.addAssist(); boxScore.save();
+    boxScore.addAssist()
+    game.setNeedsSync(true);
+    boxScore.save();
   }
 
   $scope.addTurnover = function(game, boxScore) {
     boxScore.addTurnover();
     game.turnovers += 1;
-    game.save();
+    game.setNeedsSync(true);
     boxScore.save();
   }
 
   $scope.addFoul = function(game, boxScore) {
     boxScore.addFoul();
     game.fouls += 1;
-    game.save();
+    game.setNeedsSync(true);
     boxScore.save();
   }
 
@@ -87,39 +99,45 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
   $scope.removeScore = function(game, boxScore, amount) {
     boxScore.removeScore(amount);
     game.points = game.points > amount ? game.points - amount : 0;
-    game.save();
+    game.setNeedsSync(true);
     boxScore.save();
   };
 
   $scope.removeShotAttempt = function(game, boxScore, amount) {
-    boxScore.removeShotAttempt(amount); boxScore.save();
+    boxScore.removeShotAttempt(amount)
+    game.setNeedsSync(true);
+    boxScore.save();
   };
 
   $scope.removeRebound = function(game, boxScore) {
-    boxScore.removeRebound(); boxScore.save();
+    boxScore.removeRebound()
+    game.setNeedsSync(true);
+    boxScore.save();
   }
 
   $scope.removeAssist = function(game, boxScore) {
-    boxScore.removeAssist(); boxScore.save();
+    boxScore.removeAssist()
+    game.setNeedsSync(true);
+    boxScore.save();
   }
 
   $scope.removeTurnover = function(game, boxScore) {
     boxScore.removeTurnover();
     game.turnovers  = game.turnovers > 0 ? game.turnovers - 1 : 0;
-    game.save();
+    game.setNeedsSync(true);
     boxScore.save();
   }
 
   $scope.removeFoul = function(game, boxScore) {
     boxScore.removeFoul();
     game.fouls = game.fouls > 0 ? game.fouls - 1 : 0
-    game.save();
+    game.setNeedsSync(true);
     boxScore.save();
   }
 
   $scope.clearFouls = function(game) {
     game.fouls = 0;
-    game.save();
+    game.setNeedsSync(true);
   }
 
 

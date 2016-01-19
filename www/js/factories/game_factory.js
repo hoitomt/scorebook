@@ -62,6 +62,11 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
     return deferred.promise;
   };
 
+  GameFactory.prototype.setNeedsSync = function(isNeedsSync) {
+    this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
+    this.save();
+  }
+
   GameFactory.prototype.save = function() {
     console.log("Persist to WebSQL");
     if(this.newRecord()){

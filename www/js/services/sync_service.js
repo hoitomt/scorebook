@@ -1,9 +1,10 @@
-app.factory('SyncService', function($http, $q, $cookies, Config) {
+app.factory('SyncService', function($http, $q, $cookies, Config, TeamFactory) {
   var config = {
     headers: {
       'Authorization': 'Token token=' + $cookies.get('apiKey')
     }
   };
+
   var SyncService = {
     get: function(team) {
 
@@ -39,8 +40,37 @@ app.factory('SyncService', function($http, $q, $cookies, Config) {
       );
       return deferred.promise;
 
+    },
+    sync: function() {
+      // Sync new teams with players
+      TeamFactory.unsyncedTeams().then(function(teams){
+        console.log("result");
+      });
+
+
+      // var teams = TeamFactory.teams();
+      // $scope.isSyncing = true;
+      // for(team of teams){
+      //   console.log("Team: ", team);
+      //   $scope.syncMessage = "Syncing Team:" + team.name
+      //   team.sync();
+      // }
+      // $scope.isSyncing = false;
     }
   }
 
   return SyncService;
 });
+
+// Logic
+// Select all teams where needs_sync = true and remote id is null
+//   POST teams with players to API
+
+// Select all teams where needs_sync = true and remote id is NOT null
+//   PUT teams with players to API
+
+// Select all games where needs_sync = true and remote id is null
+//   POST games with box scores to API
+
+// Select all games where needs_sync = true and remote id is NOT null
+//   PUT games with box scores to API

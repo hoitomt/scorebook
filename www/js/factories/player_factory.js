@@ -3,7 +3,6 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
   var PlayerFactory = function(args) {
     this.rowid = args.rowid || null;
     this.remoteId = args.remoteId || args.remote_id || null;
-    this.needsSync = args.needsSync || args.needs_sync || true;
     this.name = args.name;
     this.number = args.number;
     this.teamId = args.teamId || args.team_id;
@@ -76,8 +75,7 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
       name: this.name,
       number: this.number,
       teamId: this.teamId,
-      remoteId: this.remoteId,
-      needsSync: this.needsSync
+      remoteId: this.remoteId
     };
   };
 

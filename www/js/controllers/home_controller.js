@@ -1,4 +1,4 @@
-app.controller('homeController', function($scope, $state, $cookies, $location, GameFactory, TeamFactory) {
+app.controller('homeController', function($scope, $state, $cookies, $location, GameFactory, TeamFactory, SyncService) {
   function refreshItems() {
     // GameFactory.games().then(function(games){
     //   $scope.games = games
@@ -27,4 +27,10 @@ app.controller('homeController', function($scope, $state, $cookies, $location, G
   } else {
     $scope.connectedClass = 'not-connected';
   }
+
+
+  $scope.syncData = function() {
+    SyncService.sync();
+  }
 });
+
