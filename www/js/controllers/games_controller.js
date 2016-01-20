@@ -1,4 +1,5 @@
 app.controller('gamesController', function($scope, $state, $stateParams, $ionicHistory, $location, GameFactory, TeamFactory) {
+  $scope.isReady = false;
 
   $scope.showCorrectionPanel = false;
 
@@ -8,13 +9,9 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
 
   TeamFactory.teams().then(function(teams){
     $scope.teams = teams;
-  });
-
-  if($stateParams.gameId) {
-    var gameKey = $stateParams.gameId
-    console.log("Game ID: " + gameKey);
-    $scope.game = GameFactory.find(gameKey);
-  };
+  }).finally(function(){
+    $scope.isReady = true;
+  });;
 
   $scope.createGame = function(valid, gameParams) {
     console.log("Game Parameters: ", gameParams);

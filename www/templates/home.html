@@ -1,4 +1,4 @@
-<ion-view view-title="Scorebook">
+<ion-view view-title="Scorebook" ng-show="isReady">
   <ion-nav-buttons side="secondary">
     <a class="button icon-left ion-wifi button-assertive"
        ng-show="!isConnected"
@@ -9,18 +9,20 @@
   </ion-nav-buttons>
 
   <ion-content class="padding">
-    <div ng-show="isNewUser">
-      <h3>Welcome to Scorebook!</h3>
-      <h4>Please add a team</h4>
-      <a ui-sref="tab.newTeam" class="button button-balanced">New Team</a>
-    </div>
-    <div ng-show="!isNewUser">
-      <a ui-sref="tab.newGame" class="button button-balanced">New Game</a>
-      <div class="list list-inset">
-        <div class="item item-divider">Games</div>
-        <a ng-repeat="game in games" class="item" ui-sref="tab.gameBoxScore({gameId: game.rowid})">
-          <h2 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h2>
-        </a>
+    <div>
+      <div ng-show="isNewUser">
+        <h3>Welcome to Scorebook!</h3>
+        <h4>Please add a team</h4>
+        <a ui-sref="tab.newTeam" class="button button-balanced">New Team</a>
+      </div>
+      <div ng-show="!isNewUser">
+        <a ui-sref="tab.newGame" class="button button-balanced">New Game</a>
+        <div class="list list-inset">
+          <div class="item item-divider">Games</div>
+          <a ng-repeat="game in games" class="item" ui-sref="tab.gameBoxScore({gameId: game.rowid})">
+            <h2 style="margin-top: 10px; margin-bottom: 10px;">{{game.opponent}} on {{game.date}}</h2>
+          </a>
+        </div>
       </div>
     </div>
   </ion-content>

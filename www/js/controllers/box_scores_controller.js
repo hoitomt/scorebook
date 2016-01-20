@@ -1,5 +1,5 @@
 app.controller('boxScoresController', function($scope, $state, $stateParams, $location, GameFactory, PlayerFactory, BoxScoreFactory) {
-  console.log("Box Score Controller");
+  $scope.isReady = false;
   var gameId = $stateParams.gameId;
   $scope.inGamePlayerBoxScores = new Array;
   $scope.benchPlayerBoxScores = new Array;
@@ -28,8 +28,9 @@ app.controller('boxScoresController', function($scope, $state, $stateParams, $lo
 
       $scope.boxScores = boxScoresWithPlayers;
       refreshPlayerStatus();
-      $scope.$apply()
-    })
+      $scope.isReady = true;
+      $scope.$apply();
+    });
   });
 
   function refreshPlayerStatus() {

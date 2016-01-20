@@ -128,7 +128,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     views: {
       'tab-notab': {
         templateUrl: 'templates/teams/edit.html',
-        controller: 'teamsController'
+        controller: 'playersController'
       }
     }
   })

@@ -1,11 +1,12 @@
 app.controller('homeController', function($scope, $state, $cookies, $location, GameFactory, TeamFactory, SyncService) {
+  $scope.isReady = false;
+
   function refreshItems() {
-    // GameFactory.games().then(function(games){
-    //   $scope.games = games
-    // });
     TeamFactory.teams().then(function(teams){
       $scope.teams = teams;
       $scope.isNewUser = teams.length <= 0;
+    }).finally(function(){
+      $scope.isReady = true;
     });
     GameFactory.games().then(function(games){
       $scope.games = games;
@@ -13,13 +14,6 @@ app.controller('homeController', function($scope, $state, $cookies, $location, G
   }
 
   refreshItems();
-
-  // $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-  //   console.log("State changed: ", toState);
-  //   if ($location.path() == "/") {
-  //     $scope.refreshItems();
-  //   }
-  // });
 
   var connected = $cookies.get('connected');
   if(connected && connected == 'true') {

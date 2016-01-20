@@ -1,4 +1,4 @@
-<ion-view view-title="New Game">
+<ion-view view-title="New Game" ng-show="isReady">
   <ion-content class="padding">
     <form name="newGameForm" ng-submit="createGame(newGameForm.$valid, game)" novalidate>
       <div class="list list-inset">

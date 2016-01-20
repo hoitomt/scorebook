@@ -1,23 +1,11 @@
 app.controller('teamsController', function($scope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
-  // Use for button display
+  $scope.isReady = false;
+
   TeamFactory.teams().then(function(teams){
-    console.log("TeamController:", teams.length);
     $scope.teams = teams;
+  }).finally(function(){
+    $scope.isReady = true;
   });
-
-  resetNewPlayerForm();
-
-  var teamId = $stateParams.teamId;
-  if(teamId){
-    TeamFactory.find(teamId).then(function(team){
-      $scope.team = team;
-      refreshPlayers(team.rowid);
-    });
-  }
-
-  $scope.navigateToTeams = function() {
-    $state.go('tab.teams');
-  }
 
   $scope.createTeam = function(valid, teamParams) {
     console.log("Team: ", valid);
@@ -34,63 +22,13 @@ app.controller('teamsController', function($scope, $state, $stateParams, $locati
     }
   };
 
-  $scope.createPlayer = function(valid, team, playerParams) {
-    console.log("Player: ", valid);
-    if(!valid) {
-      console.log("Invalid Player Create");
-      $scope.showErrors = true;
-    } else {
-      console.log("Add Player to Player: ", team, "Player: ", playerParams);
-      playerParams.teamId = team.rowid;
-      var player = new PlayerFactory(playerParams);
-      player.save().then(function(player){
-        team.setNeedsSync(true);
-        resetNewPlayerForm();
-        refreshPlayers(team.rowid);
-      });
-    }
-  };
-
-  $scope.deletePlayer = function(team, playerParams) {
-    console.log("Player: ", playerParams);
-    PlayerFactory.deletePlayer(playerParams.rowid).then(function(){
-      team.setNeedsSync(true);
-      refreshPlayers(playerParams.teamId);
-    });
-  };
-
-  $scope.updatePlayer = function(team, playerParams) {
-    console.log("Update Player from Team: ", team, "Player: ", playerParams);
-    var player = new PlayerFactory(playerParams);
-    $scope.player = player;
-    $scope.updatePlayerState = true;
-  };
-
   $scope.cancelCreateTeam = function() {
     resetTeam();
     $state.go('tab.teams')
   };
 
-  function refreshPlayers(teamId) {
-    PlayerFactory.players(teamId).then(function(players) {
-      $scope.players = players;
-    });
-  };
-
   function resetTeam() {
     $scope.team = {name: ""};
   };
-
-  function resetNewPlayerForm() {
-    console.log("Reset the form");
-    $scope.updatePlayerState = false;
-    $scope.showErrors = false;
-    $scope.player = {name: null, number: null};
-    if(angular.isDefined($scope.teamRoster)){
-      $scope.teamRoster.$setPristine();
-      $scope.teamRoster.$setUntouched();
-    }
-  };
-
 
 });
