@@ -1,6 +1,4 @@
-app.controller('playersController', function($scope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
-  $scope.isReady = false;
-
+app.controller('playersController', function($scope, $rootScope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
   resetNewPlayerForm();
 
   var teamId = $stateParams.teamId;
@@ -47,7 +45,7 @@ app.controller('playersController', function($scope, $state, $stateParams, $loca
     PlayerFactory.players(teamId).then(function(players) {
       $scope.players = players;
     }).finally(function(){
-      $scope.isReady = true;
+      $rootScope.isReady = true;
     });
   };
 

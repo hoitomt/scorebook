@@ -25,13 +25,12 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
 
     teamQuery().then(function(res) {
       var teamArray = new Array;
-      if(res.rows.length == 0) {
-        return;
-      }
-      var teamsParams = res.rows;
-      for(var i = 0; i < teamsParams.length; i++) {
-        var team = teamsParams.item(i);
-        teamArray.push(new TeamFactory(team));
+      if(res.rows.length > 0) {
+        var teamsParams = res.rows;
+        for(var i = 0; i < teamsParams.length; i++) {
+          var team = teamsParams.item(i);
+          teamArray.push(new TeamFactory(team));
+        }
       }
       deferred.resolve(teamArray);
     }, function(e) {
@@ -46,8 +45,10 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     var deferred = $q.defer();
 
     DatabaseService.selectTeam(teamId).then(function(res) {
-      if(res.rows.length == 0) return;
-      var team = new TeamFactory(res.rows.item(0));
+      var team = null;
+      if(res.rows.length >= 0) {
+        team = new TeamFactory(res.rows.item(0));
+      }
       deferred.resolve(team);
     }, function(e) {
       deferred.reject(e);
@@ -86,25 +87,6 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
   TeamFactory.prototype.newRecord = function() {
     return !this.rowid;
   };
-
-  // TeamFactory.prototype.sync = function() {
-  //   console.log("Sync the team: ", this);
-  //   var syncFunction = null;
-  //   if(team.remoteId){
-  //     syncFunction = SyncService.putTeam;
-  //   } else {
-  //     syncFunction = SyncService.postTeam;
-  //   }
-  //   var that = this;
-  //   syncFunction(that).then(function(data) {
-  //     that.remoteId = data.id;
-  //     that.syncPlayers(data.players);
-  //     that.save();
-  //     console.log("sync complete");
-  //   }, function(reject) {
-  //     console.log("sync failed");
-  //   });
-  // };
 
   TeamFactory.prototype.syncPlayers = function(playerData) {
     // sync the players

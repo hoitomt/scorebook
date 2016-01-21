@@ -1,6 +1,4 @@
-app.controller('gamesController', function($scope, $state, $stateParams, $ionicHistory, $location, GameFactory, TeamFactory) {
-  $scope.isReady = false;
-
+app.controller('gamesController', function($scope, $rootScope, $state, $stateParams, $ionicHistory, $location, GameFactory, TeamFactory) {
   $scope.showCorrectionPanel = false;
 
   // Default the select list to "Select Team"
@@ -10,7 +8,7 @@ app.controller('gamesController', function($scope, $state, $stateParams, $ionicH
   TeamFactory.teams().then(function(teams){
     $scope.teams = teams;
   }).finally(function(){
-    $scope.isReady = true;
+    $rootScope.isReady = true;
   });;
 
   $scope.createGame = function(valid, gameParams) {

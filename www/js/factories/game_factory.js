@@ -34,10 +34,11 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
 
     DatabaseService.selectGames().then(function(res) {
       var gameArray = new Array;
-      if(res.rows.length == 0) return;
-      var gamesParams = res.rows;
-      for(var i = 0; i < gamesParams.length; i++) {
-        gameArray.push(new GameFactory(gamesParams.item(i)));
+      if(res.rows.length > 0) {
+        var gamesParams = res.rows;
+        for(var i = 0; i < gamesParams.length; i++) {
+          gameArray.push(new GameFactory(gamesParams.item(i)));
+        }
       }
       deferred.resolve(gameArray);
     }, function(e) {
@@ -52,8 +53,10 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
     var deferred = $q.defer();
 
     DatabaseService.selectGame(gameId).then(function(res) {
-      if(res.rows.length == 0) return;
-      var game = new GameFactory(res.rows.item(0));
+      var game = null;
+      if(res.rows.length >= 0) {
+        game = new GameFactory(res.rows.item(0));
+      }
       deferred.resolve(game);
     }, function(e) {
       deferred.reject(e);

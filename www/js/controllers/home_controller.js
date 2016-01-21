@@ -1,12 +1,12 @@
-app.controller('homeController', function($scope, $state, $cookies, $location, GameFactory, TeamFactory, SyncService) {
-  $scope.isReady = false;
+app.controller('homeController', function($scope, $rootScope, $state, $cookies, $location, GameFactory, TeamFactory, SyncService) {
+  $scope.isNewUser = false;
 
   function refreshItems() {
     TeamFactory.teams().then(function(teams){
       $scope.teams = teams;
       $scope.isNewUser = teams.length <= 0;
     }).finally(function(){
-      $scope.isReady = true;
+      $rootScope.isReady = true;
     });
     GameFactory.games().then(function(games){
       $scope.games = games;

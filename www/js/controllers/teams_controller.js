@@ -1,10 +1,10 @@
-app.controller('teamsController', function($scope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
+app.controller('teamsController', function($scope, $rootScope, $state, $stateParams, $location, TeamFactory, PlayerFactory) {
   $scope.isReady = false;
 
   TeamFactory.teams().then(function(teams){
     $scope.teams = teams;
   }).finally(function(){
-    $scope.isReady = true;
+    $rootScope.isReady = true;
   });
 
   $scope.createTeam = function(valid, teamParams) {
