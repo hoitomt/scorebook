@@ -9,15 +9,22 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     this.userId = args.userId || UserFactory.userId() || 0;
   };
 
-  TeamFactory.teams = function() {
-    var teamQuery = DatabaseService.selectTeams;
-    return this.queryForTeams(teamQuery);
-  }
+  TeamFactory.find = function(teamId) {
+    console.log("Retrieve team ", teamId);
+    var deferred = $q.defer();
 
-  TeamFactory.unsyncedTeams = function() {
-    var teamQuery = DatabaseService.selectUnsyncedTeams;
-    return this.queryForTeams(teamQuery);
-  }
+    DatabaseService.selectTeam(teamId).then(function(res) {
+      var team = null;
+      if(res.rows.length >= 0) {
+        team = new TeamFactory(res.rows.item(0));
+      }
+      deferred.resolve(team);
+    }, function(e) {
+      deferred.reject(e);
+    });
+
+    return deferred.promise;
+  };
 
   TeamFactory.queryForTeams = function(teamQuery) {
     console.log("Retrieve all teams");
@@ -40,27 +47,28 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     return deferred.promise;
   };
 
-  TeamFactory.find = function(teamId) {
-    console.log("Retrieve team ", teamId);
-    var deferred = $q.defer();
-
-    DatabaseService.selectTeam(teamId).then(function(res) {
-      var team = null;
-      if(res.rows.length >= 0) {
-        team = new TeamFactory(res.rows.item(0));
-      }
-      deferred.resolve(team);
-    }, function(e) {
-      deferred.reject(e);
-    });
-
-    return deferred.promise;
+  TeamFactory.teams = function() {
+    var teamQuery = DatabaseService.selectTeams;
+    return this.queryForTeams(teamQuery);
   };
+
+  TeamFactory.unsyncedTeams = function() {
+    var teamQuery = DatabaseService.selectUnsyncedTeams;
+    return this.queryForTeams(teamQuery);
+  };
+
+  TeamFactory.updateRemoteIdAndSync = function(rowid, remoteId) {
+    return DatabaseService.updateTeamRemoteIdAndSync(rowid, remoteId);
+  }
 
   TeamFactory.prototype.setNeedsSync = function(isNeedsSync) {
     this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
     this.save();
   }
+
+  TeamFactory.prototype.newRecord = function() {
+    return !this.rowid;
+  };
 
   TeamFactory.prototype.save = function() {
     console.log("Persist to WebSQL");
@@ -84,10 +92,6 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     return deferred.promise;
   };
 
-  TeamFactory.prototype.newRecord = function() {
-    return !this.rowid;
-  };
-
   TeamFactory.prototype.syncPlayers = function(playerData) {
     // sync the players
     for(player of this.players) {
@@ -101,6 +105,14 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     }
   };
 
+  TeamFactory.prototype.syncValues = function() {
+    return {
+      name: this.name,
+      id: this.remoteId,
+      remote_id: this.rowid
+    };
+  };
+
   TeamFactory.prototype.values = function() {
     return {
       // occurrence: this.occurrence,
@@ -110,16 +122,6 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
       remoteId: this.remoteId,
       needsSync: this.needsSync
     };
-  };
-
-  TeamFactory.prototype.syncValues = function() {
-    return {
-      name: this.name
-    };
-  };
-
-  TeamFactory.prototype.serializedValues = function() {
-    return angular.toJson(this.values());
   };
 
   return TeamFactory;

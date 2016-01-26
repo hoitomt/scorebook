@@ -8,6 +8,30 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
     this.teamId = args.teamId || args.team_id;
   };
 
+  PlayerFactory.deletePlayer = function(playerId) {
+    console.log("Delete Player: ", playerId);
+    var deferred = $q.defer();
+    DatabaseService.deletePlayer(playerId).then(function(res) {
+      deferred.resolve();
+    }, function(e){
+      console.log(e.message);
+    });
+    return deferred.promise;
+  };
+
+  PlayerFactory.find = function(playerId) {
+    console.log("Retrieve Player: ", playerId);
+    var deferred = $q.defer();
+    DatabaseService.selectPlayer(teamId).then(function(res) {
+      player = new PlayerFactory(res.rows.item(0));
+      deferred.resolve(player);
+    }, function(e){
+      console.log(e.message);
+      deferred.reject(e);
+    });
+    return deferred.promise;
+  };
+
   PlayerFactory.players = function(teamId) {
     console.log("Retrieve Players for: ", teamId);
     var deferred = $q.defer();
@@ -25,28 +49,8 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
     return deferred.promise;
   };
 
-  PlayerFactory.findPlayer = function(playerId) {
-    console.log("Retrieve Player: ", playerId);
-    var deferred = $q.defer();
-    DatabaseService.selectPlayer(teamId).then(function(res) {
-      player = new PlayerFactory(res.rows.item(0));
-      deferred.resolve(player);
-    }, function(e){
-      console.log(e.message);
-      deferred.reject(e);
-    });
-    return deferred.promise;
-  }
-
-  PlayerFactory.deletePlayer = function(playerId) {
-    console.log("Delete Player: ", playerId);
-    var deferred = $q.defer();
-    DatabaseService.deletePlayer(playerId).then(function(res) {
-      deferred.resolve();
-    }, function(e){
-      console.log(e.message);
-    });
-    return deferred.promise;
+  PlayerFactory.updateRemoteId = function(rowid, remoteId) {
+    DatabaseService.updatePlayerRemoteId(rowid, remoteId);
   }
 
   PlayerFactory.prototype.save = function() {
@@ -69,6 +73,16 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
     return !this.rowid;
   };
 
+  PlayerFactory.prototype.syncValues = function() {
+    return {
+      name: this.name,
+      number: this.number,
+      team_id: this.teamId,
+      id: this.remoteId,
+      remote_id: this.rowid
+    };
+  };
+
   PlayerFactory.prototype.values = function() {
     return {
       rowid: this.rowid,
@@ -76,15 +90,6 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
       number: this.number,
       teamId: this.teamId,
       remoteId: this.remoteId
-    };
-  };
-
-  PlayerFactory.prototype.syncValues = function() {
-    return {
-      name: this.name,
-      number: this.number,
-      teamId: this.teamId,
-      id: this.remoteId
     };
   };
 

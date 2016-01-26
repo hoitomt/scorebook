@@ -43,24 +43,28 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
+    selectUnsyncedTeams: function(){
+      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * from teams where needs_sync = ?;', ['true']);
+      return queryResponse;
+    },
     updateTeam: function(team){
       var query = 'UPDATE teams SET name = ?, user_id = ?, remote_id = ?, needs_sync = ? WHERE rowid = ?';
       var queryArgs = [team.name, team.userId, team.remoteId, team.needsSync, team.rowid];
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
-    selectUnsyncedTeams: function(){
-      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * from teams where needs_sync = ?;', ['true']);
+    updateTeamRemoteIdAndSync: function(rowid, remoteId){
+      var query = 'UPDATE teams SET remote_id = ?, needs_sync = ? WHERE rowid = ?';
+      var queryArgs = [remoteId, 'false', rowid];
+      var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
 
     // Players
-    selectPlayers: function(teamId){
-      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM players WHERE team_id = ?;', [teamId]);
-      return queryResponse;
-    },
-    selectPlayer: function(gameId){
-      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM players WHERE rowid = ?', [gameId]);
+    deletePlayer: function(rowid){
+      var query = 'DELETE FROM players WHERE rowid = ?'
+      var queryArgs = [rowid];
+      var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
     insertPlayer: function(player){
@@ -69,15 +73,23 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
+    selectPlayer: function(gameId){
+      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM players WHERE rowid = ?', [gameId]);
+      return queryResponse;
+    },
+    selectPlayers: function(teamId){
+      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM players WHERE team_id = ?;', [teamId]);
+      return queryResponse;
+    },
     updatePlayer: function(player){
       var query = 'UPDATE players SET name = ?, number = ?, team_id = ?, remote_id = ? WHERE rowid = ?';
       var queryArgs = [player.name, player.number, player.teamId, player.remoteId, player.rowid];
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
-    deletePlayer: function(rowid){
-      var query = 'DELETE FROM players WHERE rowid = ?'
-      var queryArgs = [rowid];
+    updatePlayerRemoteId: function(rowid, remoteId){
+      var query = 'UPDATE players SET remote_id = ? WHERE rowid = ?';
+      var queryArgs = [remoteId, rowid];
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
