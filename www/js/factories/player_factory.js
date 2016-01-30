@@ -79,7 +79,7 @@ app.factory('PlayerFactory', function($q, DatabaseService) {
       number: this.number,
       team_id: this.teamId,
       id: this.remoteId,
-      remote_id: this.rowid
+      device_id: this.rowid
     };
   };
 

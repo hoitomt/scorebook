@@ -3,6 +3,17 @@ app.factory('LocalDatabaseService', function($q, $ionicPlatform, $cordovaSQLite,
 
   var LocalDatabaseService = {
     getDatabase: function() {
+      var deferred = $q.defer();
+      if(!_db){
+        LocalDatabaseService.getNewDatabase().then(function(db){
+          deferred.resolve(db);
+        });
+      } else {
+        deferred.resolve(_db);
+      }
+      return deferred.promise;
+    },
+    getNewDatabase: function() {
       return $ionicPlatform.ready(
         function () {
           // lazy init
@@ -27,40 +38,3 @@ app.factory('LocalDatabaseService', function($q, $ionicPlatform, $cordovaSQLite,
 
   return LocalDatabaseService;
 })
-
-//   function localDatabaseService($ionicPlatform, $cordovaSQLite, $window, shellConstants) {
-//     var _db = '';
-
-//     function getDatabase() {
-//       // promise
-//       return $ionicPlatform.ready(
-//         function () {
-//           // lazy init
-//           if (!_db) {
-//             if ($window.cordova) {
-//               // native
-//               _db = $cordovaSQLite.openDB(shellConstants.DATABASE_NAME);
-//               console.log('native db', _db);
-//             } else {
-//               // web
-//               _db = $window.openDatabase(
-//                 shellConstants.DATABASE_NAME,
-//                 '1.0',
-//                 shellConstants.DATABASE_NAME,
-//                 1000 * 1000 * 10);
-//               console.log('web db', _db);
-//             }
-//           }
-//         })
-//         .then(function () {
-//           // for chaining use
-//           return _db;
-//         });
-//     }
-
-//     return {
-//       getDatabase: getDatabase
-//     };
-//   }
-
-// })();

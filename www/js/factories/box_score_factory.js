@@ -48,6 +48,10 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
     return deferred.promise;
   }
 
+  BoxScoreFactory.updateRemoteId = function(rowid, remoteId) {
+    DatabaseService.updateBoxScoreRemoteId(rowid, remoteId);
+  }
+
   BoxScoreFactory.prototype.newRecord = function() {
     return !this.rowid;
   };
@@ -97,33 +101,21 @@ app.factory('BoxScoreFactory', function($q, DatabaseService) {
 
   BoxScoreFactory.prototype.syncValues = function() {
     return {
-      name: this.name,
-      number: this.number,
-      teamId: this.teamId,
-      id: this.remoteId
-    };
-  };
-
-  BoxScoreFactory.prototype.syncBoxScoreValues = function() {
-    return {
-      name: this.name,
-      number: this.number,
-      one_point_attempts: this.onePointAttempts,
-      one_point_baskets: this.onePointMakes,
-      two_point_attempts: this.twoPointAttempts,
-      two_point_baskets: this.twoPointMakes,
-      three_point_attempts: this.threePointAttempts,
-      three_point_baskets: this.threePointMakes,
+      id: this.remoteId,
+      device_id: this.rowid,
+      game_id: this.gameId,
+      player_id: this.playerId,
+      one_point_attempt: this.onePointAttempts,
+      one_point_make: this.onePointMakes,
+      two_point_attempt: this.twoPointAttempts,
+      two_point_make: this.twoPointMakes,
+      three_point_attempt: this.threePointAttempts,
+      three_point_make: this.threePointMakes,
       turnovers: this.turnovers,
       rebounds: this.rebounds,
       assists: this.assists,
-      fouls: this.fouls,
-      inGame: this.inGame
+      fouls: this.fouls
     };
-  };
-
-  BoxScoreFactory.prototype.serializedValues = function() {
-    return angular.toJson(this.values());
   };
 
   BoxScoreFactory.prototype.addScore = function(amount) {

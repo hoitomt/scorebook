@@ -61,9 +61,8 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     return DatabaseService.updateTeamRemoteIdAndSync(rowid, remoteId);
   }
 
-  TeamFactory.prototype.setNeedsSync = function(isNeedsSync) {
-    this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
-    this.save();
+  TeamFactory.updateNeedsSync = function(rowid, needsSync) {
+    return DatabaseService.updateTeamNeedsSync(rowid, needsSync);
   }
 
   TeamFactory.prototype.newRecord = function() {
@@ -92,6 +91,11 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     return deferred.promise;
   };
 
+  TeamFactory.prototype.setNeedsSync = function(isNeedsSync) {
+    this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
+    this.save();
+  }
+
   TeamFactory.prototype.syncPlayers = function(playerData) {
     // sync the players
     for(player of this.players) {
@@ -109,7 +113,7 @@ app.factory('TeamFactory', function($q, PlayerFactory, UserFactory, DatabaseServ
     return {
       name: this.name,
       id: this.remoteId,
-      remote_id: this.rowid
+      device_id: this.rowid
     };
   };
 

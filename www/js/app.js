@@ -4,10 +4,22 @@ var host = 'http://localhost:3000/api/v1';
 var app = angular.module('scorebook', ['ionic', 'ngCookies', 'ngMessages', 'ionic-datepicker', 'ngCordova'])
 
 app.constant('Config', {
+  'database_name': 'scorebook',
   'url_auth': host + '/authentication',
-  'url_team': host + '/teams',
-  'url_game': host + '/games',
-  'database_name': 'scorebook'
+  'url_team': function(teamId) {
+    if(teamId) {
+      return host + '/teams/' + teamId;
+    } else {
+      return host + '/teams';
+    }
+  },
+  'url_game': function(teamId, gameId) {
+    if(gameId) {
+      return host + '/teams/' + teamId + '/games/' + gameId;
+    } else {
+      return host + '/teams/' + teamId + '/games';
+    }
+  }
 });
 
 app.run(function($ionicPlatform, $rootScope, $cookies, $http, AuthenticationService, RootScopeService, DatabaseService) {

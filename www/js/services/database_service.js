@@ -53,6 +53,12 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
+    updateTeamNeedsSync: function(rowid, needsSync){
+      var query = 'UPDATE teams SET needs_sync = ? WHERE rowid = ?';
+      var queryArgs = ['false', rowid];
+      var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
     updateTeamRemoteIdAndSync: function(rowid, remoteId){
       var query = 'UPDATE teams SET remote_id = ?, needs_sync = ? WHERE rowid = ?';
       var queryArgs = [remoteId, 'false', rowid];
@@ -95,12 +101,22 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
     },
 
     // Games
-    selectGames: function(gameId){
-      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM games;');
+    deleteGame: function(rowid){
+      var query = 'DELETE FROM games WHERE rowid = ?'
+      var queryArgs = [rowid];
+      var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
     selectGame: function(gameId){
       var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM games WHERE rowid = ?', [gameId]);
+      return queryResponse;
+    },
+    selectGames: function(){
+      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * FROM games;');
+      return queryResponse;
+    },
+    selectUnsyncedGames: function(){
+      var queryResponse = DatabaseService.executeTransaction('SELECT rowid, * from games where needs_sync = ?;', ['true']);
       return queryResponse;
     },
     insertGame: function(game){
@@ -115,9 +131,15 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
-    deleteGame: function(rowid){
-      var query = 'DELETE FROM games WHERE rowid = ?'
-      var queryArgs = [rowid];
+    updateGameNeedsSync: function(rowid, needsSync){
+      var query = 'UPDATE games SET needs_sync = ? WHERE rowid = ?';
+      var queryArgs = ['false', rowid];
+      var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    updateGameRemoteIdAndSync: function(rowid, remoteId){
+      var query = 'UPDATE games SET remote_id = ?, needs_sync = ? WHERE rowid = ?';
+      var queryArgs = [remoteId, 'false', rowid];
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },
@@ -171,6 +193,12 @@ app.factory('DatabaseService', function($q, LocalDatabaseService){
         boxScore.inGame,
         boxScore.rowid
       ];
+      var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
+      return queryResponse;
+    },
+    updateBoxScoreRemoteId: function(rowid, remoteId){
+      var query = 'UPDATE box_scores SET remote_id = ? WHERE rowid = ?';
+      var queryArgs = [remoteId, rowid];
       var queryResponse = DatabaseService.executeTransaction(query, queryArgs);
       return queryResponse;
     },

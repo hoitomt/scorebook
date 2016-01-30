@@ -1,4 +1,4 @@
-app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, DatabaseService) {
+app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, TeamFactory, DatabaseService) {
   var GameFactory = function(args) {
     this.rowid = args.rowid || null;
     this.remoteId = args.remoteId || args.remote_id || null;
@@ -28,26 +28,6 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
     }
   };
 
-  GameFactory.games = function(number) {
-    console.log("Retrieve all games");
-    var deferred = $q.defer();
-
-    DatabaseService.selectGames().then(function(res) {
-      var gameArray = new Array;
-      if(res.rows.length > 0) {
-        var gamesParams = res.rows;
-        for(var i = 0; i < gamesParams.length; i++) {
-          gameArray.push(new GameFactory(gamesParams.item(i)));
-        }
-      }
-      deferred.resolve(gameArray);
-    }, function(e) {
-      deferred.reject(e);
-    });
-
-    return deferred.promise;
-  };
-
   GameFactory.find = function(gameId) {
     console.log("Retrieve game ", gameId);
     var deferred = $q.defer();
@@ -65,33 +45,42 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
     return deferred.promise;
   };
 
-  GameFactory.prototype.setNeedsSync = function(isNeedsSync) {
-    this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
-    this.save();
+  GameFactory.games = function(number) {
+    var gameQuery = DatabaseService.selectGames;
+    return this.queryForGames(gameQuery);
+  };
+
+  GameFactory.queryForGames = function(gameQuery) {
+    console.log("Retrieve games");
+    var deferred = $q.defer();
+
+    gameQuery().then(function(res) {
+      var gameArray = new Array;
+      if(res.rows.length > 0) {
+        var gamesParams = res.rows;
+        for(var i = 0; i < gamesParams.length; i++) {
+          gameArray.push(new GameFactory(gamesParams.item(i)));
+        }
+      }
+      deferred.resolve(gameArray);
+    }, function(e) {
+      deferred.reject(e);
+    });
+
+    return deferred.promise;
   }
 
-  GameFactory.prototype.save = function() {
-    console.log("Persist to WebSQL");
-    if(this.newRecord()){
-      var _this = this;
-      DatabaseService.insertGame(this.values()).then(function(res) {
-        _this.rowid = res.insertId;
-      });
-    } else {
-      DatabaseService.updateGame(this.values());
-    }
-  };
+  GameFactory.updateRemoteIdAndSync = function(rowid, remoteId) {
+    return DatabaseService.updateGameRemoteIdAndSync(rowid, remoteId);
+  }
 
-  GameFactory.prototype.newRecord = function() {
-    return !this.rowid;
-  };
+  GameFactory.updateNeedsSync = function(rowid, needsSync) {
+    return DatabaseService.updateGameNeedsSync(rowid, needsSync);
+  }
 
-  GameFactory.prototype.team = function() {
-    var deferred = $q.defer();
-    TeamFactory.find(self.teamId).then(function(team){
-      deferred.resolve(team);
-    });
-    return deferred.promise;
+  GameFactory.unsyncedGames = function() {
+    var gameQuery = DatabaseService.selectUnsyncedGames;
+    return this.queryForGames(gameQuery);
   }
 
   GameFactory.prototype.createBoxScores = function() {
@@ -120,15 +109,73 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
     return deferred.promise;
   }
 
-  // Returns yyyymmdd for mm/dd/yyyy
-  GameFactory.prototype.dateStamp = function() {
-    if(this.date) {
-      var dateArray = this.date.split('/');
-      return dateArray[2] + dateArray[0] + dateArray[1];
+  GameFactory.prototype.newRecord = function() {
+    return !this.rowid;
+  };
+
+  GameFactory.prototype.resetFouls = function() {
+    this.fouls = 0;
+  };
+
+  GameFactory.prototype.save = function() {
+    console.log("Persist to WebSQL");
+    if(this.newRecord()){
+      var _this = this;
+      DatabaseService.insertGame(this.values()).then(function(res) {
+        _this.rowid = res.insertId;
+      });
     } else {
-      return "";
+      DatabaseService.updateGame(this.values());
     }
   };
+
+  GameFactory.prototype.setNeedsSync = function(isNeedsSync) {
+    this.needsSync = angular.isUndefined(isNeedsSync) ? true : isNeedsSync;
+    this.save();
+  };
+
+  GameFactory.prototype.stats = function() {
+    var points = "Points: " + this.points;
+    var fouls = "Fouls: " + this.fouls;
+    var turnovers = "Turnovers: " + this.turnovers;
+    return points + ' ' + turnovers + ' ' + fouls;
+  }
+
+  GameFactory.prototype.team = function() {
+    var deferred = $q.defer();
+    TeamFactory.find(self.teamId).then(function(team){
+      deferred.resolve(team);
+    });
+    return deferred.promise;
+  }
+
+  GameFactory.prototype.updatePlayerStatus = function() {
+    this.inGamePlayers = this.players.filter(function(player) {
+      return player.inGame;
+    });
+
+    this.benchPlayers = this.players.filter(function(player) {
+      return !player.inGame;
+    });
+
+    this.save();
+  }
+
+  GameFactory.prototype.syncValues = function() {
+    var deferred = $q.defer();
+    var _this = this;
+    TeamFactory.find(this.teamId).then(function(team){
+      var v = {
+        team_id: team.remoteId,
+        date: _this.date,
+        opponent: _this.opponent,
+        device_id: _this.rowid,
+        id: _this.remoteId
+      };
+      deferred.resolve(v);
+    })
+    return deferred.promise;
+  }
 
   GameFactory.prototype.values = function() {
     return {
@@ -148,29 +195,6 @@ app.factory('GameFactory', function($q, PlayerFactory, BoxScoreFactory, Database
   GameFactory.prototype.serializedValues = function() {
     return angular.toJson(this.values());
   };
-
-  GameFactory.prototype.updatePlayerStatus = function() {
-    this.inGamePlayers = this.players.filter(function(player) {
-      return player.inGame;
-    });
-
-    this.benchPlayers = this.players.filter(function(player) {
-      return !player.inGame;
-    });
-
-    this.save();
-  }
-
-  GameFactory.prototype.stats = function() {
-    var points = "Points: " + this.points;
-    var fouls = "Fouls: " + this.fouls;
-    var turnovers = "Turnovers: " + this.turnovers;
-    return points + ' ' + turnovers + ' ' + fouls;
-  }
-
-  GameFactory.prototype.resetFouls = function() {
-    this.fouls = 0;
-  }
 
   return GameFactory;
 });
